@@ -7,3 +7,4 @@
 5. KVC KVO
 6. Defer
 7. Async Await
+8. Closure

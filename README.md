@@ -1,4 +1,4 @@
-# SwiftBasics
+# SwiftBasics 
 
 1. Unwrapped optionals
 2. Swift functions
@@ -9,3 +9,9 @@
 7. Async Await
 8. Closure
 9. Closure 2
+10. dispatch queue - serial vs concurrent
+
+
+courtsey:
+ https://www.youtube.com/@AppDeveloperPoint
+ https://www.avanderlee.com/swift/concurrent-serial-dispatchqueue/

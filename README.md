@@ -8,3 +8,4 @@
 6. Defer
 7. Async Await
 8. Closure
+9. Closure 2

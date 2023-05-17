@@ -20,6 +20,13 @@ serialQueue.async {
     print("serialQueue Task 2 finished")
 }
 
+/*
+Serial Queue prints:
+Task 1 started
+Task 1 finished
+Task 2 started
+Task 2 finished
+*/
 
 /*
  What is a concurrent queue?
@@ -40,7 +47,13 @@ concurrentQueue.async {
     print("Task 2 finished")
 }
 
-
+/*
+Concurrent Queue prints:
+Task 1 started
+Task 2 started
+Task 1 finished
+Task 2 finished
+*/
 
 /*
 The best of both worlds

@@ -12,6 +12,7 @@
 10. dispatch queue - serial vs concurrent
 11. error
 12. Protocol
+13. Sorting
 
 
 courtsey:

@@ -10,6 +10,7 @@
 8. Closure
 9. Closure 2
 10. dispatch queue - serial vs concurrent
+11. error
 
 
 courtsey:

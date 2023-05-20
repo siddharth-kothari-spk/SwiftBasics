@@ -11,6 +11,7 @@
 9. Closure 2
 10. dispatch queue - serial vs concurrent
 11. error
+12. Protocol
 
 
 courtsey:

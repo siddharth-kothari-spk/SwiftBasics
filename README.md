@@ -14,6 +14,7 @@
 12. Protocol
 13. Sorting
 14. Bitwise operators
+15. Loop variations
 
 
 courtsey:

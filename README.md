@@ -13,6 +13,7 @@
 11. error
 12. Protocol
 13. Sorting
+14. Bitwise operators
 
 
 courtsey:

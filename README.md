@@ -15,6 +15,7 @@
 13. Sorting
 14. Bitwise operators
 15. Loop variations
+16. Array methods
 
 
 courtsey:

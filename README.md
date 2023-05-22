@@ -17,8 +17,10 @@
 15. Loop variations
 16. Array methods
 17. Set operations
+18. Tuple
 
 
 courtsey:
  https://www.youtube.com/@AppDeveloperPoint
  https://www.avanderlee.com/swift/concurrent-serial-dispatchqueue/
+ https://www.programiz.com/swift-programming

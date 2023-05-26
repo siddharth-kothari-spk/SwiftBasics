@@ -18,6 +18,7 @@
 16. Array methods
 17. Set operations
 18. Tuple
+19. Dispatch Work Item
 
 
 courtsey:

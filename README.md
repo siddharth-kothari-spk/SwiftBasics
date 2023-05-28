@@ -20,6 +20,7 @@
 18. Tuple
 19. Dispatch Work Item
 20. Stack using struct
+21. Queue using struct
 
 
 courtsey:

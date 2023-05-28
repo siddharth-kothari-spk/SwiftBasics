@@ -33,6 +33,7 @@ let closure1 = {
 closure1() // prints- closure1 : Sid
 
 let closure2 = { [name]
+    name = "Test"
     print("closure2 : \(name)")
 }
 name = "Sid2"
@@ -40,6 +41,7 @@ closure2() // prints- closure2 : Sid2
 
 
 let closure3 = { [name] in
+  //  name = "Test2" // error : Cannot assign to value: 'name' is an immutable capture
     print("closure3 : \(name)")
 }
 name = "Sid3"

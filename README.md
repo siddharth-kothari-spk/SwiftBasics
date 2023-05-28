@@ -19,6 +19,7 @@
 17. Set operations
 18. Tuple
 19. Dispatch Work Item
+20. Stack using struct
 
 
 courtsey:

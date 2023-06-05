@@ -23,6 +23,7 @@
 21. Queue using struct
 22. Anagram grouping
 23. Method overload vs override
+24. generic sample
 
 
 
@@ -31,4 +32,5 @@ courtsey:
  https://www.avanderlee.com/swift/concurrent-serial-dispatchqueue/
  https://www.programiz.com/swift-programming
  https://www.swiftwithvincent.com/newsletter/how-would-you-answer-this-typical-ios-interview-question
+ https://www.avanderlee.com/swift/generics-constraints/
  

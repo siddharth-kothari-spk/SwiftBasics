@@ -11,15 +11,20 @@ import Foundation
 
 class BankAccount {
     var balance: Double = 0.0
+    private let lock = NSLock()
     func deposit(amount: Double) {
+        lock.lock()
         balance += amount
+        lock.unlock()
     }
     func withdraw(amount: Double) {
+        lock.lock()
         if amount <= balance {
             balance -= amount
         } else {
             print("Insufficient funds!")
         }
+        lock.unlock()
     }
 }
 
@@ -56,6 +61,20 @@ print("Final balance: \(account.balance)")
  bal: 20.0
  bal: 35.0
  bal: 30.0
+ bal: 25.0
+ Final balance: 25.0
+ 
+ 
+ sample output - with NSLock
+ bal: 20.0
+ bal: 15.0
+ bal: 10.0
+ bal: 20.0
+ bal: 15.0
+ bal: 20.0
+ bal: 20.0
+ bal: 20.0
+ bal: 25.0
  bal: 25.0
  Final balance: 25.0
 */

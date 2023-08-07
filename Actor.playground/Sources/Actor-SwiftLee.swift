@@ -36,3 +36,17 @@ final class ChickenFeederWithQueue {
         }
     }
 }
+
+// After Actor:
+actor ChickenFeeder {
+    let food = "worms"
+    var numberOfEatingChickens: Int = 0
+    
+    func chickenStartsEating() {
+        numberOfEatingChickens += 1
+    }
+    
+    func chickenStopsEating() {
+        numberOfEatingChickens -= 1
+    }
+}

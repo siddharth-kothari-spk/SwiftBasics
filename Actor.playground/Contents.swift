@@ -80,3 +80,53 @@ print("Final balance: \(account.balance)")
 */
 
 
+
+actor BankAccountActor {
+    var balance: Double = 0.0
+    
+    func deposit(amount: Double) {
+        balance += amount
+    }
+    
+    func withdraw(amount: Double) {
+        if amount <= balance {
+            balance -= amount
+        } else {
+            print("Insufficient funds!")
+        }
+    }
+}
+
+let actorAccount = BankAccountActor()
+Task {
+    await withTaskGroup(of: Void.self, body: { taskGroup in
+        for _ in 0..<5 {
+            taskGroup.addTask {
+                await actorAccount.deposit(amount: 10.0)
+                print("bal: \(await actorAccount.balance)")
+            }
+            taskGroup.addTask {
+                await actorAccount.withdraw(amount: 5.0)
+                print("bal: \(await actorAccount.balance)")
+            }
+        }
+        await taskGroup.waitForAll()
+    })
+    
+    print("Final balance: \(await actorAccount.balance)")
+}
+
+/*
+ sample output -
+ bal: 10.0
+ bal: 5.0
+ bal: 15.0
+ bal: 10.0
+ bal: 20.0
+ bal: 15.0
+ bal: 25.0
+ bal: 20.0
+ bal: 30.0
+ bal: 25.0
+ Final balance: 25.0
+ */

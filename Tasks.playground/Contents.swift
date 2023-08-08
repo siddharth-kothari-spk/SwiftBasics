@@ -1,5 +1,5 @@
 import UIKit
-
+// courtsey: https://www.avanderlee.com/concurrency/tasks/
 // A task allows us to create a concurrent environment from a non-concurrent method, calling methods using async/await.
 
 let sampleTask = Task {
@@ -49,3 +49,52 @@ func callingAsync() { // it is a non-async function
 callingAsync()
 //------------------------------------------------------
 
+// Cancellation
+/// 1.- Checking the `isCancelled` value of the current `Task` inside `next()`
+///   and returning `nil` to terminate the sequence.
+
+
+let asyncTaskCancel1 = Task { () -> UIImage? in
+    let imageURL = URL(string: "testURL")!
+    
+    guard Task.isCancelled else {
+        print("Starting network request...")
+        let (imageData, _) = try await URLSession.shared.data(from: imageURL)
+        return UIImage(data: imageData)
+    }
+    // any cleanup can be done here
+    print("Image request was cancelled")
+    return nil
+}
+
+/// 2. - Calling `checkCancellation()` on the `Task`, which throws a
+///   `CancellationError`.
+let asyncTaskCancel2 = Task { () -> UIImage? in
+    let imageURL = URL(string: "testURL")!
+    
+    try Task.checkCancellation()
+    print("Starting network request...")
+        let (imageData, _) = try await URLSession.shared.data(from: imageURL)
+        return UIImage(data: imageData)
+}
+
+/// 3. - Implementing `next()` with a
+///   `withTaskCancellationHandler(handler:operation:)` invocation to
+///   immediately react to cancellation.
+///   courtsey: https://forums.swift.org/t/how-to-use-withtaskcancellationhandler-properly/54341/7
+
+let asyncTaskCancel3 = Task { () -> UIImage? in
+    let imageURL = URL(string: "testURL")!
+    
+    let testTask = Task { print("onCancel")}
+    let onCancel = { testTask.cancel()}
+    
+    return try await withTaskCancellationHandler(operation: {
+        let imageURL = URL(string: "testURL")!
+        print("Starting network request...")
+        let (imageData, _) = try await URLSession.shared.data(from: imageURL)
+        return UIImage(data: imageData)
+    }, onCancel: {
+        onCancel()
+    })
+}

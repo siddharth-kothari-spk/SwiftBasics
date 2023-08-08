@@ -47,8 +47,10 @@ final class IndividualPropertyModel {
         }
     }
     
-    func longOperation() {
-        
+    func longOperation() async {
+        DispatchQueue.global().asyncAfter(deadline: .now() + 5.0, execute: DispatchWorkItem(block: {
+            print("async longOperation")
+        }))
     }
 }
 

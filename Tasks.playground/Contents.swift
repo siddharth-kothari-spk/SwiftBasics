@@ -29,3 +29,23 @@ do {
 } catch {
     print("Basic task failed with error: \(error)")
 }
+
+//------------------------------------------------------
+// We need a task to perform any async methods within a function that does not support concurrency.
+
+func asyncSample() async {
+    // some async stuff
+    print("some async stuff")
+}
+
+func callingAsync() { // it is a non-async function
+   //await asyncSample() // error : 'async' call in a function that does not support concurrency.
+    
+    /// To make it work, either we make callingAsync method by using 'async' keyword , but we have better way to handle it. using 'Task'
+    Task {
+        await asyncSample()
+    }
+}
+callingAsync()
+//------------------------------------------------------
+

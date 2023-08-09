@@ -36,3 +36,39 @@ let imagesToDownload = try await withThrowingTaskGroup(of: UIImage.self, returni
     }
     return [UIImage()]
 }
+
+
+
+// failing a group when child task throws
+let images = try await withThrowingTaskGroup(of: UIImage.self, returning: [UIImage].self) { taskGroup in
+    let photoURLs = ["https://picsum.photos/200/300", "https://picsum.photos/300/300", "https://picsum.photos/200/200"]
+    for photoURL in photoURLs {
+        taskGroup.addTask {
+            do {
+               return try await downloadPhoto(urlString: photoURL)
+            }
+            catch {
+                print("error : \(error)")
+                return UIImage()
+            }
+        }
+    }
+
+    var images = [UIImage]()
+
+    /// Note the use of `next()`:
+    /// If the next child task throws an error
+    /// and you propagate that error from this method
+    /// out of the body of a call to the
+    /// `ThrowingTaskGroup.withThrowingTaskGroup(of:returning:body:)` method,
+    /// then all remaining child tasks in that group are implicitly canceled.
+    ///
+    while let downloadImage = try await taskGroup.next() {
+        images.append(downloadImage)
+    }
+    return images
+}
+
+
+//Cancellations in groups
+//You can cancel a group of tasks by canceling the task it’s running in or by calling the cancelAll() method on the group itself.

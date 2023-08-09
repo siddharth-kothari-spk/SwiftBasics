@@ -51,3 +51,26 @@ struct MovieNotSendableToSendable: Sendable {
     }
 }
 
+
+
+// While both structs and actors are implicitly Sendable, classes are not. We can make our classes Sendable by adding conformance to the Sendable protocol. a class can only be Sendable if all of its members are Sendable and class must be final
+
+final class Movie: Sendable {
+    let formattedReleaseDate = "2022"
+}
+
+
+// there are instances where we might know a class or struct is safe to be passed across concurrency boundaries even when the compiler can’t prove it. In those cases, we can fall back on unchecked Sendable conformance.
+
+class FormatterCacheNotSendable {
+    private var formatters = [String: DateFormatter]()
+    ///
+    ///
+}
+
+// we can’t add Sendable conformance to our class because formatters isn’t Sendable. To fix this, we can add @unchecked Sendable conformance to our FormatterCacheNotSendable:
+
+
+class FormatterCacheNotSendableToSendable: @unchecked Sendable {
+    // implementation unchanged
+}

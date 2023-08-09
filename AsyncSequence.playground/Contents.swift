@@ -37,3 +37,23 @@ for await count in Counter(limit: 10) {
 print("Counter finished")
 
 
+// Many of the regular Sequence operators are also available for asynchronous sequences.
+
+for await count in Counter(limit: 10).filter({ value in
+    value%2 == 0
+}) {
+    print(count)
+}
+print("Filter counter finished")
+
+
+let stream = Counter(limit: 10).map { value in
+    value%2 == 0 ? "Even" : "Odd"
+}
+for await value in stream {
+    print(value)
+}
+print("Map counter finished")
+
+let contains = await Counter(limit: 10).contains(5)
+print(contains)

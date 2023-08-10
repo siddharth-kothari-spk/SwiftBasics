@@ -27,12 +27,17 @@ extension Downloader {
                 try self.downloadData(url, progressHandler: { progress in
                     continuation.yield(.downloading(progress))
                 }, completionHandler: { result in
+                    // method 1
                     switch result {
                     case .success(let data):
                         continuation.yield(.finished(data))
                     case .failure(let error):
                         continuation.finish(throwing: error)
-                    } 
+                    }
+                    
+                    // method 2
+                    continuation.yield(with: result.map{ .finished($0)})
+                    continuation.finish()
                 })
             } catch {
                 continuation.finish(throwing: error)

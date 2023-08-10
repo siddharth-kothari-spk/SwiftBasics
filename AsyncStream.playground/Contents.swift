@@ -66,11 +66,26 @@ extension Downloader {
         } catch {
             print("Download failed with \(error)")
             }
+        
+        // cancellable stream
+        let task = Task.detached {
+            do {
+                for try await status in download(url) {
+                    switch status {
+                    case .downloading(let progress):
+                        print("Downloading progress: \(progress)")
+                    case .finished(let data):
+                        print("Downloading completed with data: \(data)")
+                    }
+                }
+            } catch {
+                print("Download failed with \(error)")
+            }
         }
+        task.cancel()
+        }
+    
     
 }
 
 // It’s essential to not forget about the finish() callback after you’ve received the final status update. Otherwise, we will keep the stream alive, and code at the implementation level will never continue.
-
-
-

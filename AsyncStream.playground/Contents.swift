@@ -43,6 +43,11 @@ extension Downloader {
                 continuation.finish(throwing: error)
             }
             
+            // to check for unfinished stream
+            continuation.onTermination = { @Sendable status in
+                print("Stream terminated with status \(status)")
+            }
+            
         }
     }
     

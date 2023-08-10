@@ -70,7 +70,7 @@ extension Downloader {
         // cancellable stream
         let task = Task.detached {
             do {
-                for try await status in download(url) {
+                for try await status in downloadData(url) {
                     switch status {
                     case .downloading(let progress):
                         print("Downloading progress: \(progress)")

@@ -45,8 +45,27 @@ extension Downloader {
             
         }
     }
+    
+    //
+    func callDownload(_ url: URL) async {
+        do {
+            for try await status in downloadData(url) {
+                switch status {
+                case .downloading(let progress):
+                    print("Downloading progress: \(progress)")
+                case .finished(let data):
+                    print("Downloading completed: \(data)")
+                }
+            }
+            print("Download finished and stream closed")
+        } catch {
+            print("Download failed with \(error)")
+            }
+        }
+    
 }
 
 // It’s essential to not forget about the finish() callback after you’ve received the final status update. Otherwise, we will keep the stream alive, and code at the implementation level will never continue.
+
 
 

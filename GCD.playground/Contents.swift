@@ -57,7 +57,7 @@ func asyncTask() {
 
 
 // Concurrent task - In concurrent mode, tasks in the queue get dispatched one after another and starts execution immediately and task completes their execution in any order.
-print("Concurrent task")
+//print("Concurrent task")
 func concurrentTask() {
     let queue = DispatchQueue(label:"concurrentTask", attributes: .concurrent)
     
@@ -74,4 +74,36 @@ func concurrentTask() {
     }
 
 }
-concurrentTask()
+//concurrentTask()
+
+
+// Specifying Priority on Task Queues
+ /*
+  .userInteractive -> We use this for UI updates, event handling and small workloads that require low latency. This should run on the main thread.
+    .userInitiated -> We can use this when the user is waiting for results and for tasks which are required to continue user interaction. This runs in the high priority global queue.
+    .default
+    .utility -> This represents long-running tasks such as a progress indicator which is visible during computations, networking, continuous data fetching, etc. This runs in the low priority global queue.
+    .background -> This represents tasks that users are not aware of such as prefetching, maintenance, and other tasks that don’t require user interaction and aren’t time-sensitive. This has the lowest priority.
+    .unspecified
+*/
+
+func qualityOfService() {
+    let userInitiatedQueue = DispatchQueue(label: "userInitiatedQueue", qos: .userInitiated)
+    let backgroundQueue = DispatchQueue(label: "backgroundQueue", qos: .background)
+    
+    backgroundQueue.async {
+        for i in 1...5 {
+            print("backgroundQueue op inside async queue \(i)")
+        }
+    }
+    
+    userInitiatedQueue.async {
+        for i in 1...5 {
+            print("userInitiatedQueue op inside async queue \(i)")
+        }
+    }
+}
+
+// we write backgroundQueue.async block before userInitiatedQueue.async block, userInitiatedQueue task will finish earlier than the backgroundQueue.
+
+qualityOfService()

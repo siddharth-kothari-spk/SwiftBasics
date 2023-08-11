@@ -40,9 +40,9 @@ func syncTask() {
 //syncTask()
 
 // Async
-print("Asynchronous task")
+//print("Asynchronous task")
 func asyncTask() {
-    let queue = DispatchQueue(label:"syncTask")
+    let queue = DispatchQueue(label:"asyncTask")
     queue.async {
         for i in 1...5 {
             print("op inside async queue \(i)")
@@ -53,4 +53,25 @@ func asyncTask() {
         print("op outside async queue \(i)")
     }
 }
-asyncTask()
+//asyncTask()
+
+
+// Concurrent task - In concurrent mode, tasks in the queue get dispatched one after another and starts execution immediately and task completes their execution in any order.
+print("Concurrent task")
+func concurrentTask() {
+    let queue = DispatchQueue(label:"concurrentTask", attributes: .concurrent)
+    
+    queue.async {
+        for i in 1...5 {
+            print("task1 op inside async queue \(i)")
+        }
+    }
+    
+    queue.async {
+        for i in 1...5 {
+            print("task2 op inside async queue \(i)")
+        }
+    }
+
+}
+concurrentTask()

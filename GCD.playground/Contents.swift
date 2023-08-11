@@ -132,7 +132,7 @@ func mainQueue() {
 //mainQueue()
 
 // Delay task
-print("Delay execution")
+//print("Delay execution")
 func delayExecution() {
     let queue = DispatchQueue(label: "delay queue")
     print(Date())
@@ -141,4 +141,14 @@ func delayExecution() {
         print(Date()) // prints after 5 sec
     }))
 }
-delayExecution()
+//delayExecution()
+
+
+//Concurrent perform : DispatchQueue provides us with a convenient method to execute the same task concurrently for several iterations.
+func concurrentPerform() {
+    DispatchQueue.concurrentPerform(iterations: 5) { value in
+        print(value)
+    }
+}
+
+concurrentPerform()

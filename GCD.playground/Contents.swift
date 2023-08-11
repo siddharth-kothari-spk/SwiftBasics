@@ -181,7 +181,7 @@ func dispatchGroupSample() {
         group.leave()
     }
     
-    group.wait()
+    group.wait() // blocks the main queue
     
     // task4 will only start till all items inside group are complete
     queue.async {
@@ -190,4 +190,44 @@ func dispatchGroupSample() {
         }
     }
 }
-dispatchGroupSample()
+//dispatchGroupSample()
+
+func dispatchGroupSampleWithoutWait() {
+    let queue = DispatchQueue(label: "dispatch group", attributes: .concurrent)
+    let group = DispatchGroup()
+    
+    queue.async {
+        for i in 1...5 {
+            print("task1 outside group index \(i)")
+        }
+    }
+    
+    group.enter()
+    queue.async {
+        for i in 1...5 {
+            print("task2 index \(i)")
+        }
+        group.leave()
+    }
+    
+    group.enter()
+    queue.async {
+        for i in 1...5 {
+            print("task3 index \(i)")
+        }
+        group.leave()
+    }
+    
+    group.notify(queue: queue, work: DispatchWorkItem(block: {
+        print("group tasks are complete")
+    }))
+    
+    // task4 will only start till all items inside group are complete
+    queue.async {
+        for i in 1...5 {
+            print("task4 outside group index \(i)")
+        }
+    }
+}
+
+dispatchGroupSampleWithoutWait()

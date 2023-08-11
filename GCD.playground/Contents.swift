@@ -151,4 +151,43 @@ func concurrentPerform() {
     }
 }
 
-concurrentPerform()
+//concurrentPerform()
+
+// DispatchGroup  is a way to block a thread until one or more tasks finish executing. You can use this behaviour in places where you cannot make progress until all of the specified tasks are completed.
+
+func dispatchGroupSample() {
+    let queue = DispatchQueue(label: "dispatch group", attributes: .concurrent)
+    let group = DispatchGroup()
+    
+    queue.async {
+        for i in 1...5 {
+            print("task1 outside group index \(i)")
+        }
+    }
+    
+    group.enter()
+    queue.async {
+        for i in 1...5 {
+            print("task2 index \(i)")
+        }
+        group.leave()
+    }
+    
+    group.enter()
+    queue.async {
+        for i in 1...5 {
+            print("task3 index \(i)")
+        }
+        group.leave()
+    }
+    
+    group.wait()
+    
+    // task4 will only start till all items inside group are complete
+    queue.async {
+        for i in 1...5 {
+            print("task4 outside group index \(i)")
+        }
+    }
+}
+dispatchGroupSample()

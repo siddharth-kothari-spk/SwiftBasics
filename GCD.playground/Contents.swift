@@ -86,7 +86,7 @@ func concurrentTask() {
     .background -> This represents tasks that users are not aware of such as prefetching, maintenance, and other tasks that don’t require user interaction and aren’t time-sensitive. This has the lowest priority.
     .unspecified
 */
-
+//print("qualityOfService")
 func qualityOfService() {
     let userInitiatedQueue = DispatchQueue(label: "userInitiatedQueue", qos: .userInitiated)
     let backgroundQueue = DispatchQueue(label: "backgroundQueue", qos: .background)
@@ -106,4 +106,17 @@ func qualityOfService() {
 
 // we write backgroundQueue.async block before userInitiatedQueue.async block, userInitiatedQueue task will finish earlier than the backgroundQueue.
 
-qualityOfService()
+//qualityOfService()
+
+
+// Global queue : default background queue
+func globalQueue() {
+    let queue = DispatchQueue.global()
+    
+    queue.async {
+        for i in 1...5 {
+            print("globalQueue op inside async queue \(i)")
+        }
+    }
+}
+globalQueue()

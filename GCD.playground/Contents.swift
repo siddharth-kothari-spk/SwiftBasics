@@ -123,9 +123,22 @@ func globalQueue() {
 //globalQueue()
 
 // Main Queue : We should not perform UI related operations on a background queue or queue other than the main queue.
+//print("main queue")
 func mainQueue() {
     DispatchQueue.main.async(execute: Dispatch.DispatchWorkItem(block: {
         print("mainQueue")
     }))
 }
-mainQueue()
+//mainQueue()
+
+// Delay task
+print("Delay execution")
+func delayExecution() {
+    let queue = DispatchQueue(label: "delay queue")
+    print(Date())
+    
+    queue.asyncAfter(deadline: .now() + 5, execute: DispatchWorkItem(block: {
+        print(Date()) // prints after 5 sec
+    }))
+}
+delayExecution()

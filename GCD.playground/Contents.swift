@@ -24,7 +24,7 @@ func simpleTask() {
 
 
 // Sync
-print("Synchronous task")
+//print("Synchronous task")
 func syncTask() {
     let queue = DispatchQueue(label:"syncTask")
     queue.sync {
@@ -37,4 +37,20 @@ func syncTask() {
         print("op outside sync queue \(i)")
     }
 }
-syncTask()
+//syncTask()
+
+// Async
+print("Asynchronous task")
+func asyncTask() {
+    let queue = DispatchQueue(label:"syncTask")
+    queue.async {
+        for i in 1...5 {
+            print("op inside async queue \(i)")
+        }
+    }
+    
+    for i in 1...5 {
+        print("op outside async queue \(i)")
+    }
+}
+asyncTask()

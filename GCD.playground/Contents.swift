@@ -110,6 +110,7 @@ func qualityOfService() {
 
 
 // Global queue : default background queue
+//print("globalQueue")
 func globalQueue() {
     let queue = DispatchQueue.global()
     
@@ -119,4 +120,12 @@ func globalQueue() {
         }
     }
 }
-globalQueue()
+//globalQueue()
+
+// Main Queue : We should not perform UI related operations on a background queue or queue other than the main queue.
+func mainQueue() {
+    DispatchQueue.main.async(execute: Dispatch.DispatchWorkItem(block: {
+        print("mainQueue")
+    }))
+}
+mainQueue()

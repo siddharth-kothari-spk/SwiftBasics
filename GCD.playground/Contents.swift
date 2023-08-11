@@ -9,7 +9,7 @@ import Foundation
 //Serial queues guarantee that only one task runs at any given time. GCD controls the execution timing. Concurrent queues allow multiple tasks to run at the same time. The queue guarantees tasks start in the order you add them. Tasks can finish in any order.
 
 // Simple Task
-print("Simple Task")
+//print("Simple Task")
 func simpleTask() {
     let queue = DispatchQueue(label:"simpleTask")
     queue.async {
@@ -19,7 +19,22 @@ func simpleTask() {
     }
 }
 
-simpleTask()
-print("-------------------------------------------")
+//simpleTask()
+//print("-------------------------------------------")
 
 
+// Sync
+print("Synchronous task")
+func syncTask() {
+    let queue = DispatchQueue(label:"syncTask")
+    queue.sync {
+        for i in 1...5 {
+            print("op inside sync queue \(i)")
+        }
+    }
+    
+    for i in 1...5 {
+        print("op outside sync queue \(i)")
+    }
+}
+syncTask()

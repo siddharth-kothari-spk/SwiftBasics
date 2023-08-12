@@ -144,3 +144,41 @@ class FoodViewModel: ObservableObject {
   
     ...
 }
+
+/// ----------------------------------
+/// Cancelling multiple tasks
+/// ----------------------------------
+/// Now that we have our first Combine-like API, we can take the next obvious step by introducing a function analogous to Combine’s store(in: Set<AnyCancellable>).
+
+import Combine
+
+extension Task {
+    func store(in set: inout Set<AnyCancellable>) {
+        set.insert(AnyCancellable(cancel))
+    }
+}
+
+///It allows us to tie the lifecycle of multiple tasks to a single reference. And the best part is, it can be used alongside with publisher subscriptions as well. For example, if we go back to our single vegetable request scenario where, which is tied to the views lifecycle and we want to observe our apps user login state, we can conveniently store both cancellation handlers in a single set.
+
+class FoodViewModel: ObservableObject {
+    ...
+  
+    private var cancellables: Set<AnyCancellable> = []
+
+    init(networkService: NetworkService, userModule: UserModule) {
+      self.networkService = networkService
+      
+      userModule.isLoggedInPublisher.sink { isLoggedIn in
+          ...
+      }
+      .store(in: &cancellables)
+    }
+
+    func displayVegetable(id: String) {
+        Task { @MainActor [weak self, networkService] in
+            ...
+        }.store(in: &cancellables)
+    }
+  
+    ...
+}

@@ -182,3 +182,27 @@ class FoodViewModel: ObservableObject {
   
     ...
 }
+
+
+/// If you don’t use Combine in your App und you find it overkill to import it, you could easily create your own AnyCancellable class to provide the same cancellation functionality
+
+final class AnyCancellable: Hashable {
+
+    private let cancel: () -> Void
+
+    init(_ cancel: @escaping () -> Void) {
+        self.cancel = cancel
+    }
+
+    deinit {
+        cancel()
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+
+    static func == (lhs: AnyCancellable, rhs: AnyCancellable) -> Bool {
+        ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
+}

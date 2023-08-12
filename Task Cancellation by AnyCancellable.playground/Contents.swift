@@ -90,3 +90,57 @@ class FoodViewModel: ObservableObject {
         }
     }
 }
+
+/// ----------------------------------
+//// Single task cancellation using AnyCancellable
+/// ----------------------------------
+///AnyCancellable has the advantage of being automatically canceled by calling its cancel function as soon as there is no more reference to it.
+///Let’s create a simple extension on Task to make use of this.
+
+import Combine
+
+extension Task {
+  func eraseToAnyCancellable() -> AnyCancellable {
+        AnyCancellable(cancel)
+    }
+}
+
+///With this in place we can omit the deinit and store an AnyCancellable instead of the task.
+
+class FoodViewModel: ObservableObject {
+    ...
+  
+    private var cancellable: AnyCancellable?
+
+    func displayVegetable(id: String) {
+        cancellable = Task { @MainActor [weak self, networkService] in
+            ...
+        }.eraseToAnyCancellable()
+    }
+  
+    ...
+}
+
+/// Another advantage of this approach is the ability to always use the same reference when you have requests that alternate. Let’s assume we have another function called displayFruit(id:). If your view is only able to display either a fruit or vegetable you can use the same reference for both, and don’t need to worry about cancelling the previous task.
+
+class FoodViewModel: ObservableObject {
+    ...
+  
+    private var cancellable: AnyCancellable?
+
+    // Canceled automatically if a fruit is requested
+    func displayVegetable(id: String) {
+        cancellable = Task { @MainActor [weak self, networkService] in
+            ...
+        }.eraseToAnyCancellable()
+    }
+
+   // Canceled automatically if a vegetable is requested
+    func displayFruit(id: String) {
+        cancellable = Task { @MainActor [weak self, networkService] in
+            ...
+        }.eraseToAnyCancellable()
+    }
+  
+    ...
+}

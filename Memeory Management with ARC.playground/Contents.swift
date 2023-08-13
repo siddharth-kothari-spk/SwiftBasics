@@ -339,3 +339,82 @@ Country Indonesia deinitialized!
 City Jakarta deinitialized!
 
 */
+
+// Strong Reference Cycles for Closures
+
+//Strong reference cycles could occur for closures as well. Because closures are reference types like classes. When you assign a closure to a property, you are assigning a reference to that closure. It’s the same problem, two strong references are keeping each other alive.
+
+//The cycle can occur if you assign a closure to a property of a class instance, and the body of that closure captures the instance. This capture might occur because the closure’s body accesses a property or a method of the instance, such as self.someProperty or self.someMethod(). These accesses cause the closure to capture self, creating a strong reference cycle.
+
+class PhoneNumber {
+    let countryCode: String
+    let number: String?
+    
+    // Closure captures self, creating a strong reference cycle
+    lazy var fullNumber: () -> String = {
+        if let safeNumber = self.number {
+            return "\(self.countryCode)\(safeNumber)"
+        } else {
+            return "\(self.countryCode) empty number"
+        }
+    }
+    
+    init(countryCode: String, number: String? = nil) {
+        self.countryCode = countryCode
+        self.number = number
+        print("\(self.countryCode) initialized with number \(String(describing: self.number))")
+    }
+    
+    deinit {
+        print("\(countryCode) deinitialized")
+    }
+}
+
+
+var phoneNumber: PhoneNumber?
+phoneNumber = PhoneNumber(countryCode: "+62", number: "987654321")
+print(phoneNumber!.fullNumber())
+phoneNumber = nil
+
+/* OUTPUT:
+ +62 initialized with number 987654321
+
++62987654321
+
+*/
+
+// To solve cycles in closures, we can use closure capture list.
+class PhoneNumber2 {
+    let countryCode: String
+    let number: String?
+    
+    lazy var fullNumber: () -> String = {
+        [unowned self] in // Capture self as unowned
+        if let safeNumber = self.number {
+            return "\(self.countryCode)\(safeNumber)"
+        } else {
+            return "\(self.countryCode) empty number"
+        }
+    }
+    
+    init(countryCode: String, number: String? = nil) {
+        self.countryCode = countryCode
+        self.number = number
+    }
+    
+    deinit {
+        print("\(countryCode) deinitialized")
+    }
+}
+
+var phoneNumber2: PhoneNumber2?
+phoneNumber2 = PhoneNumber2(countryCode: "+62", number: "987654321")
+print(phoneNumber2!.fullNumber())
+phoneNumber2 = nil
+
+/* OUTPUT:
+
++62987654321
++62 deinitialized
+
+*/

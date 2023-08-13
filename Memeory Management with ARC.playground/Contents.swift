@@ -168,3 +168,54 @@ honda2 initialized!
 honda2 deinitialized!
 
 */
+
+// Let’s create a class named IdentityCard. In this case, a person may or may not have an identity card, but an identity card will always be associated with a person.
+
+//The User and IdentityCard example shows a situation where one property that’s allowed to be nil and another property that can’t be nil, have the potential to cause a strong reference cycle. This scenario is best resolved with an unowned reference.
+
+class User {
+    let name: String
+    var card: IdentityCard? // Strong reference
+    init(name: String) {
+        self.name = name
+        print("\(name) initialized!")
+    }
+    deinit {
+        print("\(name) deinitialized!")
+    }
+}
+
+class IdentityCard {
+    let number: UInt64
+    unowned let owner: User // Unowned reference
+    init(number: UInt64, owner: User) {
+        self.number = number
+        self.owner = owner
+        print("Card \(number) initialized!")
+    }
+    deinit {
+        print("Card \(number) deinitialized!")
+    }
+}
+
+// when we set the User instance to nil, there will be no more strong references, and the instance will be deallocated.
+
+var user: User?
+var idCard: IdentityCard?
+
+user = User(name: "user")
+idCard = IdentityCard(number: 1234_5678_9012_3456, owner: user!)
+
+user!.card = idCard
+
+user = nil
+idCard = nil
+
+/* OUTPUT:
+
+user initialized!
+Card 1234567890123456 initialized!
+user deinitialized!
+Card 1234567890123456 deinitialized!
+
+*/

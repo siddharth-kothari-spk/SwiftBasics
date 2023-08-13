@@ -284,3 +284,58 @@ Wagon bussiness deinitialized!
 Wagon excecutive deinitialized!
 
 */
+
+
+// Unowned References and Implicitly Unwrapped Optional Properties
+// This type of reference is best fit in a scenario where both properties should always have a value, and neither property should ever be nil once initialization is complete.
+
+//In this scenario, we will combine an unowned property on one class with an implicitly unwrapped optional property on another class.
+
+class Country {
+    let name: String
+    var capitalCity: City! // Implicitly Unwrapped Optional Property
+    init(name: String, capitalName: String) {
+        self.name = name
+        self.capitalCity = City(name: capitalName, country: self)
+        print("Country \(name) initialized!")
+    }
+    deinit {
+        print("Country \(name) deinitialized!")
+    }
+}
+
+class City {
+    let name: String
+    unowned let country: Country // Unowned reference
+    init(name: String, country: Country) {
+        self.name = name
+        self.country = country
+        print("City \(name) initialized!")
+    }
+    deinit {
+        print("City \(name) deinitialized!")
+    }
+}
+
+// The initializer for City is called from within the initializer for Country. However, the initializer for Country can’t pass self to the City initializer until a new Country instance is fully initialized, as described in Two-Phase Initialization (https://docs.swift.org/swift-book/documentation/the-swift-programming-language/initialization/#Two-Phase-Initialization)
+
+// That’s why we declare the capitalCity property of Country as an implicitly unwrapped optional property (City!). This means that the default value of the capitalCity property is nil, like any other optional, but can be accessed without the need to unwrap its value as described in Implicitly Unwrapped Optionals (https://docs.swift.org/swift-book/documentation/the-swift-programming-language/thebasics/#Implicitly-Unwrapped-Optionals)
+
+// All of this means that we can create the Country and City instances in a single statement, without creating a strong reference cycle, and the capitalCity property can be accessed directly, without needing to use an exclamation point (!) to unwrap its optional value.
+
+var country: Country?
+
+country = Country(name: "Indonesia", capitalName: "Jakarta")
+print("\(country!.name)'s capital city is called \(country!.capitalCity.name)")
+
+country = nil
+
+/* OUTPUT:
+
+City Jakarta initialized!
+Country Indonesia initialized!
+Indonesia's capital city is called Jakarta
+Country Indonesia deinitialized!
+City Jakarta deinitialized!
+
+*/

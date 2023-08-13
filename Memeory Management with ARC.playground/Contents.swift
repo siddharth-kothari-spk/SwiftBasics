@@ -69,3 +69,53 @@ ref2 = nil
 */
 // instance is never deallocated because there is still a reference to that instance - ref3
 
+
+//---------------------------------
+// Strong Reference Cycles Between Class Instances
+//---------------------------------
+
+class Driver {
+    let name: String
+    var car: Car? // Strong reference
+    init(name: String) {
+        self.name = name
+        print("\(name) initialized!")
+    }
+    deinit {
+        print("\(name) deinitialized!")
+    }
+}
+
+class Car {
+    let type: String
+    var owner: Driver? // Strong reference
+    init(type: String) {
+        self.type = type
+        print("\(type) initialized!")
+    }
+    deinit {
+        print("\(type) deinitialized!")
+    }
+}
+
+// Not every person has a car, and not every car has an owner. The value of each car and owner property is nil initially.
+
+var driver: Driver?
+var honda: Car?
+
+driver = Driver(name: "driver")
+honda = Car(type: "honda")
+
+driver!.car = honda
+honda!.owner = driver
+
+driver = nil
+honda = nil
+
+// Both instances will not be deallocated, because the reference count never reaches zero for both instances.
+/* OUTPUT:
+
+driver initialized!
+honda initialized!
+
+*/

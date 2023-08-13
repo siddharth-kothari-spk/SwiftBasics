@@ -219,3 +219,68 @@ user deinitialized!
 Card 1234567890123456 deinitialized!
 
 */
+
+// Unowned Optional Reference
+
+//We can use an unowned optional reference and a weak reference in the same contexts. The difference is that when you use an unowned optional reference, you’re responsible for making sure it always refers to a valid object or is set to nil.
+
+class Train {
+    let name: String
+    var wagons: [Wagon] // Strong reference
+    init(name: String) {
+        self.name = name
+        self.wagons = []
+        print("Train \(name) initialized!")
+    }
+    deinit {
+        print("Train \(name) deinitialized!")
+    }
+}
+
+class Wagon {
+    let type: String
+    unowned var train: Train // Unowned reference
+    unowned var nextWagon: Wagon? // Unowned Optional reference
+    init (type: String, train: Train) {
+        self.type = type
+        self.train = train
+        self.nextWagon = nil
+        print("Wagon \(type) initialized!")
+    }
+    deinit {
+        print("Wagon \(type) deinitialized!")
+    }
+}
+
+var malabar: Train?
+var economyWagon: Wagon?
+var bussinessWagon: Wagon?
+var excecutiveWagon: Wagon?
+
+malabar = Train(name: "malabar")
+economyWagon = Wagon(type: "economy", train: malabar!)
+bussinessWagon = Wagon(type: "bussiness", train: malabar!)
+excecutiveWagon = Wagon(type: "excecutive", train: malabar!)
+
+economyWagon!.nextWagon = bussinessWagon
+bussinessWagon!.nextWagon = excecutiveWagon
+
+malabar!.wagons = [economyWagon!, bussinessWagon!, excecutiveWagon!]
+
+malabar = nil
+economyWagon = nil
+bussinessWagon = nil
+excecutiveWagon = nil
+
+/* OUTPUT:
+
+Train malabar initialized!
+Wagon economy initialized!
+Wagon bussiness initialized!
+Wagon excecutive initialized!
+Train malabar deinitialized!
+Wagon economy deinitialized!
+Wagon bussiness deinitialized!
+Wagon excecutive deinitialized!
+
+*/

@@ -101,21 +101,70 @@ class Car {
 // Not every person has a car, and not every car has an owner. The value of each car and owner property is nil initially.
 
 var driver: Driver?
-var honda: Car?
+var car: Car?
 
 driver = Driver(name: "driver")
-honda = Car(type: "honda")
+car = Car(type: "honda")
 
-driver!.car = honda
-honda!.owner = driver
+driver!.car = car
+car!.owner = driver
 
 driver = nil
-honda = nil
+car = nil
 
 // Both instances will not be deallocated, because the reference count never reaches zero for both instances.
 /* OUTPUT:
 
 driver initialized!
-honda initialized!
+car initialized!
+
+*/
+
+// To resolve the strong reference cycles problem, we can use weak reference and unowned reference.
+
+//The Driver and Car example shows a situation where two properties, both allowed to be nil, have the potential to cause a strong reference cycle. This scenario is best resolved with a weak reference.
+
+class Driver2 {
+    let name: String
+    var car: Car2? // Strong reference
+    init(name: String) {
+        self.name = name
+        print("\(name) initialized!")
+    }
+    deinit {
+        print("\(name) deinitialized!")
+    }
+}
+
+class Car2 {
+    let type: String
+    weak var owner: Driver2? // Weak reference
+    init(type: String) {
+        self.type = type
+        print("\(type) initialized!")
+    }
+    deinit {
+        print("\(type) deinitialized!")
+    }
+}
+
+var driver2: Driver2?
+var car2: Car2?
+
+driver2 = Driver2(name: "driver2")
+car2 = Car2(type: "honda2")
+
+driver2!.car = car2
+car2!.owner = driver2
+
+driver2 = nil
+car2 = nil
+
+/* OUTPUT:
+
+ driver2 initialized!
+honda2 initialized!
+ driver2 deinitialized!
+honda2 deinitialized!
 
 */

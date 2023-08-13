@@ -48,3 +48,24 @@ test1()
  person3 deinitialized!
 
 */
+
+
+// multiple references
+var ref1: Person?
+var ref2: Person?
+var ref3: Person?
+
+ref1 = Person(name: "person4")
+ref2 = ref1
+ref3 = ref2
+
+ref1 = nil
+ref2 = nil
+
+/* OUTPUT:
+
+ person4 initialized!
+
+*/
+// instance is never deallocated because there is still a reference to that instance - ref3
+

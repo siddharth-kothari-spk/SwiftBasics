@@ -29,7 +29,7 @@ Person(name: "person1") // the instance is allocated, then deallocated properly.
 */
 
 // create a constant that references that instance
-let dimas = Person(name: "person2") // instance is never deallocated because there is a strong reference to that instance, and the constant never leaves its scope
+let person2 = Person(name: "person2") // instance is never deallocated because there is a strong reference to that instance, and the constant never leaves its scope
 
 /* OUTPUT:
 
@@ -37,3 +37,14 @@ let dimas = Person(name: "person2") // instance is never deallocated because the
 
 */
 
+// create constant inside function
+func test1() {
+    let person3 = Person(name: "person3") // instance will be deallocated because the constant leaves its scope
+}
+test1()
+/* OUTPUT:
+
+ person3 initialized!
+ person3 deinitialized!
+
+*/

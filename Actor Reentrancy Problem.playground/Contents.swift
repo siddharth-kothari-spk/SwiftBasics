@@ -72,3 +72,45 @@ Task {
  This is a very typical reentrancy problem and it seems like Swift actors will not give us any compiler error when it happens.
  */
 
+// Solution 1 :
+// The first approach suggested by Apple engineers is to always mutate the actor state in synchronous code.
+
+extension BankAccount {
+    func withdrawMutateSynchronous(_ amount: Int) async {
+        
+        // Perform authorization before check balance
+        guard await authorizeTransaction() else {
+            return
+        }
+        print("✅ Transaction authorized: \(amount)")
+        
+        print("🤓 Check balance for withdrawal: \(amount)")
+        guard canWithdraw(amount) else {
+            print("🚫 Not enough balance to withdraw: \(amount)")
+            return
+        }
+        
+        balance -= amount
+        
+        print("💰 Account balance: \(balance)")
+        
+    }
+}
+
+Task {
+    await account.withdrawMutateSynchronous(900)
+}
+
+Task {
+    await account.withdrawMutateSynchronous(300)
+}
+
+/*
+ OUTPUT:
+ ✅ Transaction authorized: 300
+ 🤓 Check balance for withdrawal: 300
+ 💰 Account balance: 700
+ ✅ Transaction authorized: 900
+ 🤓 Check balance for withdrawal: 900
+ 🚫 Not enough balance to withdraw: 900
+ */

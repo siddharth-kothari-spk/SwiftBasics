@@ -114,3 +114,53 @@ Task {
  🤓 Check balance for withdrawal: 900
  🚫 Not enough balance to withdraw: 900
  */
+
+// the withdrawal workflow doesn’t really make sense. What’s the point of authorizing a transaction if the account has insufficient balance?
+
+// Solution 2:
+// Check the Actor State After a Suspension Point
+
+extension BankAccount {
+    func withdrawAfterActorStateCheck(_ amount: Int) async {
+        
+        print("🤓 Check balance for withdrawal: \(amount)")
+        guard canWithdraw(amount) else {
+            print("🚫 Not enough balance to withdraw: \(amount)")
+            return
+        }
+        
+        guard await authorizeTransaction() else {
+            return
+        }
+        print("✅ Transaction authorized: \(amount)")
+        
+        // Check balance again after the authorization process
+        guard canWithdraw(amount) else {
+            print("⛔️ Not enough balance to withdraw: \(amount) (authorized)")
+            return
+        }
+
+        balance -= amount
+        
+        print("💰 Account balance: \(balance)")
+        
+    }
+}
+
+Task {
+    await account.withdrawAfterActorStateCheck(800)
+}
+
+Task {
+    await account.withdrawAfterActorStateCheck(700)
+}
+
+/*
+ OUTPUT:
+ 🤓 Check balance for withdrawal: 800
+ 🤓 Check balance for withdrawal: 700
+ ✅ Transaction authorized: 800
+ 💰 Account balance: 200
+ ✅ Transaction authorized: 700
+ ⛔️ Not enough balance to withdraw: 700 (authorized)
+ */

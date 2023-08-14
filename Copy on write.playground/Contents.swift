@@ -21,7 +21,7 @@ print(address: array2) // 0x6000006ae920
 
 // Custom Value type incorporating Copy On Write
 /// https://forums.swift.org/t/using-a-protocol-to-more-easily-implement-copy-on-write/47130
-/// 
+///
 @dynamicMemberLookup
 protocol CopyOnWrite {
     associatedtype Storage: AnyObject & Copyable
@@ -79,8 +79,9 @@ second.value = "second"
 print(first.value) // first
 print(second.value) // second
 print(first._storage === second._storage) // false
-/*
 
+
+// KEy path solution
 final class Ref<T> {
   var val : T
   init(_ v : T) {val = v}
@@ -102,32 +103,6 @@ struct Box<T> {
     }
 }
 
-struct Car {
-  let model = "M3"
-  let year = "2004"
-}
-
-struct BoxCar<Car> {
-    var ref : Ref<Car>
-    init(_ x : Car) { ref = Ref(x) }
-
-    var value: Car {
-        get { return ref.val }
-        set {
-          if (!isKnownUniquelyReferenced(&ref)) {
-            ref = Ref(newValue)
-            return
-          }
-          ref.val = newValue
-        }
-    }
-}
-
-var car1 = BoxCar(Car())
-var car2 = car1
-
-print(address: car1)
-print(address: car2)
 // This code was an example taken from the swift repo doc file OptimizationTips
 // Link: https://github.com/apple/swift/blob/master/docs/OptimizationTips.rst#advice-use-copy-on-write-semantics-for-large-values
 
@@ -143,4 +118,6 @@ print(address: car2)
   print(address: box1)
   print(address: box2)
   */
-*/
+ 
+
+// WIP : https://github.com/apple/swift-evolution/blob/main/proposals/0258-property-wrappers.md#copy-on-write

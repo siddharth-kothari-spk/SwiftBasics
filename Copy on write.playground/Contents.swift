@@ -20,7 +20,8 @@ print(address: array2) // 0x6000006ae920
 
 
 // Custom Value type incorporating Copy On Write
-
+/// https://forums.swift.org/t/using-a-protocol-to-more-easily-implement-copy-on-write/47130
+/// 
 @dynamicMemberLookup
 protocol CopyOnWrite {
     associatedtype Storage: AnyObject & Copyable

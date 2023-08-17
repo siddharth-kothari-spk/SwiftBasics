@@ -86,3 +86,11 @@ func printElement3(_ element: some CustomStringConvertible) {
     print(element.description)
 }
 
+
+// courtsey: https://abhimuralidharan.medium.com/generics-in-ios-swift-f6993c2770b7
+// Generic function with multiple parameters:
+//Declare
+func anotherMethod<T, U> (first: T, second: U) { print("first one called")}
+func anotherMethod<T> (first: T, second: T) { print("second one called")}//Call
+anotherMethod(first: 123, second: "456")  // T - Int, U - String
+anotherMethod(first: 123, second: 456)  // T - Int

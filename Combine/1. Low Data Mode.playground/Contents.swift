@@ -72,3 +72,8 @@ func fetchImage(largeUrl: URL, smallUrl: URL) -> AnyPublisher<UIImage, Error> {
     return image
     }.eraseToAnyPublisher()
 }
+
+// 3. Enabling low data mode for an entire URLSession
+var configuration = URLSessionConfiguration.default
+configuration.allowsConstrainedNetworkAccess = false
+let session = URLSession(configuration: configuration)

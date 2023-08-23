@@ -77,3 +77,10 @@ func fetchImage(largeUrl: URL, smallUrl: URL) -> AnyPublisher<UIImage, Error> {
 var configuration = URLSessionConfiguration.default
 configuration.allowsConstrainedNetworkAccess = false
 let session = URLSession(configuration: configuration)
+
+// 4. Low data mode for media playback
+guard let mediaUrl = URL(string: "https://yourdomain.com/media.mp4")
+  else { return }
+
+let asset = AVURLAsset(url: mediaUrl, options: [AVURLAssetAllowsConstrainedNetworkAccessKey: false])
+

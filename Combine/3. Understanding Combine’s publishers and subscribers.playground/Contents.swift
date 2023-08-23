@@ -31,3 +31,25 @@ public protocol Subscriber : CustomCombineIdentifierConvertible {
 // ii) receive(_:) is called every time the subscription pushes a new object to the subscriber. The subscriber returns a Subscription.Demand to the subscription to communicate the number of items it wants to receive now.  this demand is added to any demands that were sent to the subscription earlier.
 
 // iii) When the final value is generated, the subscription will call receive(completion:) with the result of the sequence. This method is only called once and concludes the stream of new values.
+
+
+// Int Subscriber
+class IntSubscriber: Subscriber {
+    typealias Input = Int // This subscriber will only work on publishers that emit Int values
+    
+    typealias Failure = Never // we don't expect publishers that this subscriber subscribes to emit failures
+    
+    func receive(subscription: Subscription) {
+        print("received subscription")
+        subscription.request(.max(1)) // subscriber wants to receive a single value
+    }
+    
+    func receive(_ input: Int) -> Subscribers.Demand {
+        print("received input: \(input)")
+        return .none // we don't want to alter the demand of this publisher when we receive a new value.
+    }
+    
+    func receive(completion: Subscribers.Completion<Never>) {
+        print("received completion: \(completion)") // called when the subscriber finishes
+    }
+}

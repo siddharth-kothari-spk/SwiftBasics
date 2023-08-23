@@ -58,3 +58,25 @@ NotificationCenter.default.post(Notification(name: UIApplication.keyboardDidShow
 subscription?.cancel()
 NotificationCenter.default.post(Notification(name: UIApplication.keyboardDidShowNotification))
 
+
+// 3. Transforming publishers
+/// when we use the earlier example where we subscribed to the UIApplication.keyboardDidShowNotification, we can extract the keyboard height and push that to subscribers instead of the full Notification object using the following code:
+let notification = UIApplication.keyboardDidShowNotification
+let publisher = NotificationCenter.default
+  .publisher(for: notification)
+  .map { (notification) -> CGFloat in
+    guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {
+      return 0.0
+    }
+
+    return endFrame.cgRectValue.height
+}
+
+/// you apply a transformation to a publisher, you create a new publisher that wraps the original publisher and has a new output.
+/// 
+[1, 2, 3]
+  .publisher
+  .collect(2)
+  .sink(receiveValue: { value in
+    print("Received value \(value)")
+  })

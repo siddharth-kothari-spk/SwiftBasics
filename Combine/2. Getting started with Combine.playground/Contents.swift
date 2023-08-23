@@ -30,3 +30,22 @@ import Combine
 
 
 
+// 2. Keeping track of subscriptions
+/// If you examine the return type of sink, you will find that it's AnyCancellable. An AnyCancellable object is a type-erased wrapper around a Cancellable subscription that you can hold on to in your view controller.
+
+var subscription: AnyCancellable?
+
+func subscribe() {
+  let notification = UIApplication.keyboardDidShowNotification
+  let publisher = NotificationCenter.default.publisher(for: notification)
+  subscription = publisher.sink(receiveCompletion: { _ in
+    print("Completion")
+  }, receiveValue: { notification in
+    print("Received notification: \(notification)")
+  })
+}
+
+subscribe()
+NotificationCenter.default.post(Notification(name: UIApplication.keyboardDidShowNotification))
+
+

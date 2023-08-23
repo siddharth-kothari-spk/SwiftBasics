@@ -1,6 +1,7 @@
 /// courtsey: https://www.donnywals.com/understanding-combines-publishers-and-subscribers/
 ///
 import Combine
+import Foundation
 
 /// publishers send values to their subscribers, and that a publisher can emit one or more values, but that they only emit a single completion (or error) event.
 /// A publisher/subscriber relationship in Combine is solidified in a third object, the subscription. When a subscriber is created and subscribes to a publisher, the publisher will create a subscription object and it passes a reference of the subscription to the subscriber.
@@ -53,3 +54,34 @@ class IntSubscriber: Subscriber {
         print("received completion: \(completion)") // called when the subscriber finishes
     }
 }
+
+// 2. Writing a custom publisher
+/// custom version of a DataTaskPublisher. This custom publisher will automatically decode Data into a Decodable model.
+///
+public protocol Publisher {
+
+  associatedtype Output
+  associatedtype Failure : Error
+
+  func receive<S>(subscriber: S) where S : Subscriber, Self.Failure == S.Failure, Self.Output == S.Input
+}
+// This receive(subscriber:) method is called immediately when the subscribe(subscriber:) method is called on the publisher. In the receive(subscriber:) method you are expected to create a Subscription object and pass it to the subscriber.
+
+/// Custom DataTaskPublisher
+extension URLSession {
+  struct DecodedDataTaskPublisher<Output: Decodable>: Publisher {
+    typealias Failure = Error
+
+    let urlRequest: URLRequest
+
+    func receive<S>(subscriber: S) where S : Subscriber, Failure == S.Failure, Output == S.Input {
+      let subscription = DecodedDataTaskSubscription(urlRequest: urlRequest, subscriber: subscriber)
+      subscriber.receive(subscription: subscription)
+    }
+  }
+
+  func decodedDataTaskPublisher<Output: Decodable>(for urlRequest: URLRequest) -> DecodedDataTaskPublisher<Output> {
+    return DecodedDataTaskPublisher<Output>(urlRequest: urlRequest)
+  }
+}
+//  In the receive(subscriber:) method, an instance of DecodedDataTaskSubscription is created. The subscription object receives the URLRequest and the subscriber, and the subscription is passed to the subscriber's receive(subscription:) method

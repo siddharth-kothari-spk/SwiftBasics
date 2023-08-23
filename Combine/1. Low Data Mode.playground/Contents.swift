@@ -46,3 +46,29 @@ URLSession.shared.dataTask(with: request) {data, response, error in
 func downloadConstrainedAsset() {
     
 }
+
+// 2. Using Combine
+
+enum NetworkError: Error {
+    case invalidData
+}
+
+func fetchImage(largeUrl: URL, smallUrl: URL) -> AnyPublisher<UIImage, Error> {
+  var request = URLRequest(url: largeUrl)
+  request.allowsConstrainedNetworkAccess = false
+
+  return URLSession.shared.dataTaskPublisher(for: request)
+    .tryCatch { error -> URLSession.DataTaskPublisher in
+      guard error.networkUnavailableReason == .constrained else {
+        throw error
+      }
+      //  make a new request for a smaller image
+      return URLSession.shared.dataTaskPublisher(for: smallUrl)
+  }.tryMap { (data, _) -> UIImage in
+    guard let image = UIImage(data: data) else {
+      throw NetworkError.invalidData
+    }
+
+    return image
+    }.eraseToAnyPublisher()
+}

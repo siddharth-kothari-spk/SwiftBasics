@@ -1,6 +1,7 @@
 /// courtsey: https://www.donnywals.com/an-introduction-to-combine/
 ///
 import Combine
+import UIKit
 
 // 1. Subscribing to a simple publisher
 [1,2,3]
@@ -38,7 +39,7 @@ var subscription: AnyCancellable?
 func subscribe() {
   let notification = UIApplication.keyboardDidShowNotification
   let publisher = NotificationCenter.default.publisher(for: notification)
-  subscription = publisher.sink(receiveCompletion: { _ in
+  subscription = publisher.sink(receiveCompletion: { _ in // i)
     print("Completion")
   }, receiveValue: { notification in
     print("Received notification: \(notification)")
@@ -48,4 +49,12 @@ func subscribe() {
 subscribe()
 NotificationCenter.default.post(Notification(name: UIApplication.keyboardDidShowNotification))
 
+/// i) If you place this code in a Playground, you'll find that the print statement in the receiveValue closure is executed, but the receiveCompletion is never called. The reason for this is that NotificationCenter publisher can send an infinite number of notifications to its subscribers.
+
+///If you remove the assignment of subscription by removing subscription = before publisher.sink you will find that the receiveValue closure is never called due to the subscription being discarded as soon as the subscribe() function is done executing.
+///
+///ou can also explicitly cancel a subscription by calling cancel() on the AnyCancellable that contains the subscription, or directly on any object that conforms to Cancellable.
+///
+subscription?.cancel()
+NotificationCenter.default.post(Notification(name: UIApplication.keyboardDidShowNotification))
 

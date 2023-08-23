@@ -14,7 +14,7 @@ import Foundation
 // 1. Creating a custom subscriber
 /// subscribers request (or demand) a number of values from a subscription object.
 /// publisher receives a subscriber, creates a subscription and ties the subscription and subscriber together.
-
+@available(iOS 13, *)
 public protocol Subscriber : CustomCombineIdentifierConvertible {
 
   associatedtype Input
@@ -55,9 +55,38 @@ class IntSubscriber: Subscriber {
     }
 }
 
+// DecodableDataTaskSubscriber
+class DecodableDataTaskSubscriber<Input: Decodable>: Subscriber, Cancellable {
+typealias Failure = Error
+
+var subscription: Subscription?
+
+func receive(subscription: Subscription) {
+  print("Received subscription")
+  self.subscription = subscription
+  subscription.request(.unlimited)
+}
+
+func receive(_ input: Input) -> Subscribers.Demand {
+  print("Received value: \(input)")
+  return .none
+}
+
+func receive(completion: Subscribers.Completion<Error>) {
+  print("Received completion \(completion)")
+  cancel()
+}
+
+func cancel() {
+  subscription?.cancel()
+  subscription = nil
+}
+}
+
 // 2. Writing a custom publisher
 /// custom version of a DataTaskPublisher. This custom publisher will automatically decode Data into a Decodable model.
 ///
+@available(iOS 13, *)
 public protocol Publisher {
 
   associatedtype Output
@@ -88,6 +117,7 @@ extension URLSession {
 
 
 // 3. Custom subscription
+@available(iOS 13, *)
 public protocol Subscription : Cancellable, CustomCombineIdentifierConvertible {
   func request(_ demand: Subscribers.Demand)
 }
@@ -132,3 +162,17 @@ extension URLSession.DecodedDataTaskPublisher {
 }
 
 
+// 4. Custom Publisher, Subscriber  and Subscription usage
+
+// You connect a subscriber to a publisher by calling the publisher’s subscribe(_:) method. After making this call, the publisher invokes the subscriber’s receive(subscription:) method. This gives the subscriber a Subscription instance, which it uses to demand elements from the publisher, and to optionally cancel the subscription.
+struct SomeModel: Decodable {}
+var cancellable: AnyCancellable?
+
+func makeTheRequest() {
+  let request = URLRequest(url: URL(string: "https://www.donnywals.com")!)
+  let publisher: URLSession.DecodedDataTaskPublisher<SomeModel> = URLSession.shared.decodedDataTaskPublisher(for: request)
+  let subscriber = DecodableDataTaskSubscriber<SomeModel>()
+  publisher.receive(subscriber: subscriber)
+}
+
+makeTheRequest()

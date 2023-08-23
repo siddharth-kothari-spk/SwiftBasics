@@ -84,4 +84,51 @@ extension URLSession {
     return DecodedDataTaskPublisher<Output>(urlRequest: urlRequest)
   }
 }
-//  In the receive(subscriber:) method, an instance of DecodedDataTaskSubscription is created. The subscription object receives the URLRequest and the subscriber, and the subscription is passed to the subscriber's receive(subscription:) method
+///  In the receive(subscriber:) method, an instance of DecodedDataTaskSubscription is created. The subscription object receives the URLRequest and the subscriber, and the subscription is passed to the subscriber's receive(subscription:) method
+
+
+// 3. Custom subscription
+public protocol Subscription : Cancellable, CustomCombineIdentifierConvertible {
+  func request(_ demand: Subscribers.Demand)
+}
+/// Subscription inherits from the Cancellable protocol, subscriptions are also required to implement a cancel() method that's used to free up any resources that the subscription holds on to
+
+extension URLSession.DecodedDataTaskPublisher {
+  class DecodedDataTaskSubscription<Output: Decodable, S: Subscriber>: Subscription
+    where S.Input == Output, S.Failure == Error {
+
+    private let urlRequest: URLRequest
+    private var subscriber: S?
+
+    init(urlRequest: URLRequest, subscriber: S) {
+      self.urlRequest = urlRequest
+      self.subscriber = subscriber
+    }
+
+    func request(_ demand: Subscribers.Demand) {
+      if demand > 0 {
+        URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, error in
+          defer { self?.cancel() }
+
+          if let data = data {
+            do {
+              let result = try JSONDecoder().decode(Output.self, from: data)
+              self?.subscriber?.receive(result)
+              self?.subscriber?.receive(completion: .finished)
+            } catch {
+              self?.subscriber?.receive(completion: .failure(error))
+            }
+          } else if let error = error {
+            self?.subscriber?.receive(completion: .failure(error))
+          }
+        }.resume()
+      }
+    }
+
+    func cancel() {
+      subscriber = nil
+    }
+  }
+}
+
+

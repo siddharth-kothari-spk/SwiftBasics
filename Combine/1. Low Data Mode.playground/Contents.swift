@@ -84,3 +84,13 @@ guard let mediaUrl = URL(string: "https://yourdomain.com/media.mp4")
 
 let asset = AVURLAsset(url: mediaUrl, options: [AVURLAssetAllowsConstrainedNetworkAccessKey: false])
 
+// 5. Detecting Low Data mode without relying on an error
+// If you want to be pro-active with your low data mode implementation, and for instance warn a user that they are about to engage in an activity that will potentially use more data than they would like, you can use the Network framework. Apple's Network framework is typically used if you want to perform very low-level networking management that you can't achieve with URLSession. Since URLSession doesn't appear to have any way to detect whether a user has low data mode turned on before making a request, you must fall back to Network to do this kind of detection
+let monitor = NWPathMonitor()
+
+monitor.pathUpdateHandler = { path in
+  let constrained = path.isConstrained
+}
+
+monitor.start(queue: DispatchQueue.global())
+

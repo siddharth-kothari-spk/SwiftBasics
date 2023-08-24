@@ -42,3 +42,18 @@ sources.forEach { source in
 dispatchGroup.notify(queue: .main) {
     print("All articles processed and displayed.")
 }
+
+// 3. Limiting Concurrent Network Requests
+
+//To prevent overwhelming the network with too many concurrent requests, we can use a dispatch semaphore to limit the number of simultaneous requests.
+
+let networkSemaphore = DispatchSemaphore(value: 3)
+
+sources.forEach { source in
+    networkSemaphore.wait()
+    concurrentQueue.async {
+        let articles = fetchArticles(from: source)
+        processAndDisplay(articles)
+        networkSemaphore.signal()
+    }
+}

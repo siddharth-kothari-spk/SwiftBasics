@@ -57,3 +57,17 @@ sources.forEach { source in
         networkSemaphore.signal()
     }
 }
+
+// 4. Monitoring System Events
+
+//In the news aggregator app, we can use dispatch sources to monitor and respond to system events. For example, we can watch for network connectivity changes to update the app’s behavior accordingly.
+
+let networkReachabilitySource = DispatchSource.makeNetworkReachabilitySource(flags: .reachable, queue: .main)
+networkReachabilitySource.setEventHandler {
+    if networkReachabilitySource.flags.contains(.reachable) {
+        print("Network is reachable. Resume fetching articles.")
+    } else {
+        print("Network is unreachable. Pause fetching articles.")
+    }
+}
+networkReachabilitySource.resume()

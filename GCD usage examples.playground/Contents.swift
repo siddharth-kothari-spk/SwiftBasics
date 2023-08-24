@@ -71,3 +71,18 @@ networkReachabilitySource.setEventHandler {
     }
 }
 networkReachabilitySource.resume()
+
+// 5. Implementing Timers
+
+//Using dispatch sources, we can also implement timers to refresh the app’s content at regular intervals. This ensures that users always have access to the latest news articles.
+
+let refreshInterval: TimeInterval = 60 * 5 // 5 minutes
+let refreshTimer = DispatchSource.makeTimerSource(queue: .main)
+refreshTimer.schedule(deadline: .now() + refreshInterval, repeating: refreshInterval)
+
+refreshTimer.setEventHandler {
+    print("5 minutes have passed. Refreshing articles...")
+    fetchAndProcessArticles()
+}
+
+refreshTimer.resume()

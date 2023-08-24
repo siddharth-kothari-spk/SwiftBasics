@@ -23,3 +23,22 @@ sources.forEach { source in
         processAndDisplay(articles)
     }
 }
+
+// 2. Synchronizing Article Processing
+
+//When processing articles, it’s essential to ensure that they’re displayed correctly and without any race conditions. To achieve this, we can use a dispatch group to synchronize the processing of articles.
+
+let dispatchGroup = DispatchGroup()
+
+sources.forEach { source in
+    concurrentQueue.async(group: dispatchGroup) {
+        let articles = fetchArticles(from: source)
+        dispatchGroup.enter()
+        processAndDisplay(articles)
+        dispatchGroup.leave()
+    }
+}
+
+dispatchGroup.notify(queue: .main) {
+    print("All articles processed and displayed.")
+}

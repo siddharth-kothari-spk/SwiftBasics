@@ -9,3 +9,17 @@
      Dispatch Sources: Dispatch sources enable monitoring of system events like file changes, timers, signals, and more.
  */
 
+
+// A News Aggregator App
+
+// 1. Fetching Articles Concurrently :
+//Fetching articles from multiple sources can be time-consuming if done serially. With GCD, we can create a concurrent queue and fetch articles from different sources simultaneously.
+
+let concurrentQueue = DispatchQueue(label: "com.example.articleFetching", attributes: .concurrent)
+
+sources.forEach { source in
+    concurrentQueue.async {
+        let articles = fetchArticles(from: source)
+        processAndDisplay(articles)
+    }
+}

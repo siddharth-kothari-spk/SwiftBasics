@@ -147,3 +147,34 @@ struct ApiSession: APISessionProviding {
     }
 }
 // The execute method returns a publisher so that other objects can subscribe to this publisher, and can handle the result of the network call.
+
+// handling error
+enum FeedService {
+    case photoFeed
+}
+
+extension FeedService: RequestProviding {
+  var urlRequest: URLRequest {
+    switch self {
+    case .photoFeed:
+      guard let url = URL(string: "https://mydomain.com/feed") else {
+        preconditionFailure("Invalid URL used to create URL instance")
+      }
+
+      return URLRequest(url: url)
+    }
+  }
+}
+
+struct PhotoFeedProvider: PhotoFeedProviding {
+  let apiSession: APISessionProviding
+
+  func getPhotoFeed() -> AnyPublisher<PhotoFeed, Never> {
+    return apiSession.execute(FeedService.photoFeed)
+      .catch { error in
+        return Just(PhotoFeed())
+      }.eraseToAnyPublisher()
+  }
+}
+
+//

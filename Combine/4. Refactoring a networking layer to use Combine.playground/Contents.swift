@@ -4,7 +4,7 @@
 
 // protocols
 protocol FeedProviding {
-    
+    func getFeed(_ completion: @escaping (Result<Feed, Error>) -> Void)
 }
 
 // model
@@ -34,3 +34,10 @@ class FeedViewModel {
   }
 }
 
+// In Swift, it's possible to write extensions for protocols to give them default behaviors and functionality.
+extension FeedProviding {
+    func getFeed(_ completion: @escaping (Result<Feed, Error>) -> Void) {
+        network.fetch(.feed, completion: completion)
+      }
+}
+// why we should bother with this method and protocol at all. We might just as well either skip the service object and use a networking object directly in the view model. Or we could just call service.network.fetch(_:completion:) from the view model. The reason we need a service object in between the network and the view model is that we want the view model to be data source agnostic.

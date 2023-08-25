@@ -4,7 +4,12 @@
 
 // protocols
 protocol FeedProviding {
+    var network: Networking { get }
     func getFeed(_ completion: @escaping (Result<Feed, Error>) -> Void)
+}
+
+enum Endpoint {
+  case feed
 }
 
 // model
@@ -41,3 +46,18 @@ extension FeedProviding {
       }
 }
 // why we should bother with this method and protocol at all. We might just as well either skip the service object and use a networking object directly in the view model. Or we could just call service.network.fetch(_:completion:) from the view model. The reason we need a service object in between the network and the view model is that we want the view model to be data source agnostic.
+
+// based on the few lines of code in the extension we added to FeedProviding we now have three new goals:
+
+// 1.The networking object should accept some kind of endpoint or request configuration object.
+// 2.The networking object's fetch(_:completion:) should decode data into an appropriate model.
+// 3.Any object that implements FeedProviding requires a networking object.
+
+// for 1st 2 points
+protocol Networking {
+  func fetch<T: Decodable>(_ endpoint: Endpoint, completion: @escaping (Result<T, Error>) -> Void)
+}
+
+// By making fetch(_:completion:) generic over a Decodable object T, we achieve an extremely high level of flexibility. The service layer can define what the Networking object will decode its data into because Swift will infer T based on the completion closure that is passed to fetch(_:completion:).
+
+//To implement the third requirement from the list above, all we need to do is add a network property to the FeedProviding protocol.

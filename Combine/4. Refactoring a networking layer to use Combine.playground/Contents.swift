@@ -1,3 +1,4 @@
+import Foundation
 /// courtsey: https://www.donnywals.com/refactoring-a-networking-layer-to-use-combine/
 ///
 // we're designing a networking API. The goal here is to abstract the networking layer in such a way that we can easily use, reuse and arguably most importantly, test all code we write
@@ -90,3 +91,21 @@ extension Networking {
 
 // i) we ask the endpoint object for a URLRequest object. This is a good idea because by doing that, the endpoint can configure the request.
 // We'll refactor the code in a minute so that the URLRequest configuration is abstracted behind a protocol and we don't rely on the enum anymore in the networking layer.
+
+
+protocol RequestProviding {
+  var urlRequest: URLRequest { get }
+}
+
+extension Endpoint: RequestProviding {
+  var urlRequest: URLRequest {
+    switch self {
+    case .feed:
+      guard let url = URL(string: "https://mydomain.com/feed") else {
+        preconditionFailure("Invalid URL used to create URL instance")
+      }
+
+      return URLRequest(url: url)
+    }
+  }
+}

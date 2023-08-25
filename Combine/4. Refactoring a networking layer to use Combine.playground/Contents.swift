@@ -1,6 +1,8 @@
 import Foundation
 /// courtsey: https://www.donnywals.com/refactoring-a-networking-layer-to-use-combine/
 ///
+///
+// PART 1: https://www.donnywals.com/architecting-a-robust-networking-layer-with-protocols/
 // we're designing a networking API. The goal here is to abstract the networking layer in such a way that we can easily use, reuse and arguably most importantly, test all code we write
 
 // protocols

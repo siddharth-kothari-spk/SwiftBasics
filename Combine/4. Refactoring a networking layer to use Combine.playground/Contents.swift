@@ -132,3 +132,18 @@ protocol PhotoFeedProviding {
 
 //  it's important to understand that AnyPublisher is a generic, type erased, version of a Publisher that behaves just like a regular Publisher while hiding what kind of publisher it is exactly.
 
+// making network call
+struct ApiSession: APISessionProviding {
+    func execute<T>(_ requestProvider: RequestProviding) -> AnyPublisher<T, Error> where T: Decodable {
+        return URLSession.shared.dataTaskPublisher(for: requestProvider.urlRequest)
+        // error : Cannot convert return expression of type 'URLSession.DataTaskPublisher' to return type 'AnyPublisher<T, any Error>'
+        // we need to somehow convert that publisher into another publisher so we can eventually return AnyPublisher<T, Error>
+            .map {$0.data}
+            .decode(type: T.self, decoder: JSONDecoder())
+        // The code above takes the Output of the URLSession.DataTaskPublisher which is (data: Data, response: URLResponse) and transforms that into a publisher whose Output is Data using the map operator. The resulting publisher is then transformed again using the decode(type:decoder:) operator so we end up with a publisher who's output is equal to T.
+        // error: Cannot convert return expression of type 'Publishers.Decode<Publishers.Map<URLSession.DataTaskPublisher, JSONDecoder.Input>, T, JSONDecoder>' (aka 'Publishers.Decode<Publishers.Map<URLSession.DataTaskPublisher, Data>, T, JSONDecoder>') to return type 'AnyPublisher<T, any Error>'
+            .eraseToAnyPublisher()
+        // The code above does not handle any errors. If an error occurs at any point in this chain of publishers, the error is immediately forwarded to the object that subscribes to the publisher that's returned by execute(_:)
+    }
+}
+// The execute method returns a publisher so that other objects can subscribe to this publisher, and can handle the result of the network call.

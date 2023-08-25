@@ -1,4 +1,6 @@
 import Foundation
+import Combine
+
 /// courtsey: https://www.donnywals.com/refactoring-a-networking-layer-to-use-combine/
 ///
 ///
@@ -119,11 +121,14 @@ struct PhotoFeed: Codable {
 }
 
 protocol APISessionProviding {
-  func execute<T: Decodable>(_ requestProvider: RequestProviding, completion: @escaping (Result<T, Error>) -> Void)
+  func execute<T: Decodable>(_ requestProvider: RequestProviding) -> AnyPublisher<T, Error>
 }
 
 protocol PhotoFeedProviding {
   var apiSession: APISessionProviding { get }
 
-  func getPhotoFeed(_ completion: @escaping (Result<PhotoFeed, Error>) -> Void)
+  func getPhotoFeed() -> AnyPublisher<PhotoFeed, Never>
 }
+
+//  it's important to understand that AnyPublisher is a generic, type erased, version of a Publisher that behaves just like a regular Publisher while hiding what kind of publisher it is exactly.
+

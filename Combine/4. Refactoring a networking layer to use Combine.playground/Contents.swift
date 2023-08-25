@@ -43,7 +43,7 @@ class FeedViewModel {
 // In Swift, it's possible to write extensions for protocols to give them default behaviors and functionality.
 extension FeedProviding {
     func getFeed(_ completion: @escaping (Result<Feed, Error>) -> Void) {
-        network.fetch(.feed, completion: completion)
+        network.execute(Endpoint.feed, completion: completion)
       }
 }
 // why we should bother with this method and protocol at all. We might just as well either skip the service object and use a networking object directly in the view model. Or we could just call service.network.fetch(_:completion:) from the view model. The reason we need a service object in between the network and the view model is that we want the view model to be data source agnostic.
@@ -56,7 +56,8 @@ extension FeedProviding {
 
 // for 1st 2 points
 protocol Networking {
-  func fetch<T: Decodable>(_ endpoint: Endpoint, completion: @escaping (Result<T, Error>) -> Void)
+    // renamed the fetch(_:completion:) method to execute(_:completion:). The reason for this is that we don't know whether the network call that's made is going to be a GET or POST.
+    func execute<T: Decodable>(_ requestProvider: RequestProviding, completion: @escaping (Result<T, Error>) -> Void)
 }
 
 // By making fetch(_:completion:) generic over a Decodable object T, we achieve an extremely high level of flexibility. The service layer can define what the Networking object will decode its data into because Swift will infer T based on the completion closure that is passed to fetch(_:completion:).
@@ -65,8 +66,8 @@ protocol Networking {
 
 // sample implementation of fetch(_:completion)
 extension Networking {
-  func fetch<T: Decodable>(_ endpoint: Endpoint, completion: @escaping (Result<T, Error>) -> Void) {
-    let urlRequest = endpoint.urlRequest // i)
+    func execute<T: Decodable>(_ requestProvider: RequestProviding, completion: @escaping (Result<T, Error>) -> Void) {
+        let urlRequest = requestProvider.urlRequest // i)
 
     URLSession.shared.dataTask(with: urlRequest) { data, response, error in
       do {

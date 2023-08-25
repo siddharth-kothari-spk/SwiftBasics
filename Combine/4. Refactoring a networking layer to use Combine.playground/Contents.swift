@@ -61,3 +61,32 @@ protocol Networking {
 // By making fetch(_:completion:) generic over a Decodable object T, we achieve an extremely high level of flexibility. The service layer can define what the Networking object will decode its data into because Swift will infer T based on the completion closure that is passed to fetch(_:completion:).
 
 //To implement the third requirement from the list above, all we need to do is add a network property to the FeedProviding protocol.
+
+// sample implementation of fetch(_:completion)
+extension Networking {
+  func fetch<T: Decodable>(_ endpoint: Endpoint, completion: @escaping (Result<T, Error>) -> Void) {
+    let urlRequest = endpoint.urlRequest // i)
+
+    URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+      do {
+        if let error = error {
+          completion(.failure(error))
+          return
+        }
+
+        guard let data = data else {
+          preconditionFailure("No error was received but we also don't have data...")
+        }
+
+        let decodedObject = try JSONDecoder().decode(T.self, from: data)
+
+        completion(.success(decodedObject))
+      } catch {
+        completion(.failure(error))
+      }
+    }.resume()
+  }
+}
+
+// i) we ask the endpoint object for a URLRequest object. This is a good idea because by doing that, the endpoint can configure the request.
+// We'll refactor the code in a minute so that the URLRequest configuration is abstracted behind a protocol and we don't rely on the enum anymore in the networking layer.

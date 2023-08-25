@@ -112,3 +112,18 @@ extension Endpoint: RequestProviding {
     }
   }
 }
+
+// PART 2: to change to combine
+struct PhotoFeed: Codable {
+    
+}
+
+protocol APISessionProviding {
+  func execute<T: Decodable>(_ requestProvider: RequestProviding, completion: @escaping (Result<T, Error>) -> Void)
+}
+
+protocol PhotoFeedProviding {
+  var apiSession: APISessionProviding { get }
+
+  func getPhotoFeed(_ completion: @escaping (Result<PhotoFeed, Error>) -> Void)
+}

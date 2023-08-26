@@ -60,3 +60,14 @@ class CarViewController2: UIViewController {
   // More VC code...
 }
 
+
+// Avoiding retains cycles when using assign(to:on:)
+// there are cases where assign(to:on:) might cause retain cycles.
+
+var subscription: AnyCancellable?
+
+func subscribeToCarCharge() {
+  subscription = viewModel.chargeRemainingText
+    .assign(to: \.label.text, on: self)
+}
+//The code above uses self as the target for the assignment, while self also holds on to the AnyCancellable that is returned by assign(to:on:). At this time there isn't much you can do other than implementing a workaround (https://forums.swift.org/t/does-assign-to-produce-memory-leaks/29546/8), or avoiding assignment to self

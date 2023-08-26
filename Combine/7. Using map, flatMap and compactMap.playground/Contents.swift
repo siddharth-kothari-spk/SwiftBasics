@@ -14,3 +14,10 @@ intSubject.sink(receiveValue: { int in
 intSubject
     .map{ intValue in "Number: \(intValue)"}
     .assign(to: \.text, on: myLabel)
+
+
+// compactMap
+let optionalPublisher = [1,2,3,nil,4,nil,5,nil].publisher.compactMap{$0}.sink(receiveValue: {int in
+    print("Received: \(int)")
+})
+

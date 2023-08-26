@@ -60,3 +60,34 @@ let sub2 = deferredFuture.sink(receiveValue: { value in
 }) // the Future executes again because it received another subscriber
 
 // The Deferred publisher's initializer takes a closure. We're expected to return a publisher from this closure. In this case we return a Future. The Deferred publisher runs its closure every time it receives a subscriber. This means that a new Future is created every time we subscribe to the Deferred publisher. So the Future still runs only once and executes immediately when it's created, but we defer the creation of the Future to a later time.
+
+
+// Wrapping an existing asynchronous operation in a Future
+// sample
+extension UNUserNotificationCenter {
+  func getNotificationSettings() -> Future<UNNotificationSettings, Never> {
+    return Future { promise in
+      self.getNotificationSettings { settings in
+        promise(.success(settings))
+      }
+    }
+  }
+}
+
+// The extension includes a single function that returns a Future<UNNotificationSettings, Never>. In the function body, a Future is created and returned. The interesting bit is in the closure that is passed to the Future initializer. In that closure, the regular, completion handler based version of getNotificationSettings is called on the current UNUserNotificationCenter instance. Inside of the completion handler, the promise closure is called with a successful result that includes the current notification settings.
+
+extension UNUserNotificationCenter {
+  func requestAuthorization(options: UNAuthorizationOptions) -> Future<Bool, Error> {
+    return Future { promise in
+      self.requestAuthorization(options: options) { result, error in
+        if let error = error {
+          promise(.failure(error))
+        } else {
+          promise(.success(result))
+        }
+      }
+    }
+  }
+}
+
+//This second extension on UNUserNotificationCenter adds a new flavor of requestAuthorization(options:) that returns a Future that tells us whether we successfully received notification permissions from a user. 

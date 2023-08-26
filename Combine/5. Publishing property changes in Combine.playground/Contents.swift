@@ -55,3 +55,31 @@ car.kwhInBattery.sink(receiveValue: { currentKwh in
 })
 
 car.drive(kilometers: 200)
+
+
+// 3. Using @Published to publish values
+
+// @Published property wrapper is a convenient way to create a publisher that behaves a lot like a CurrentValueSubject with one restriction. You can only mark properties of classes as @Published.
+
+// The reason for this is that the @Published property wrapper needs to create a proxy between the value you're mutating, the object that holds the property and the publisher that is created inside of the property wrapper.
+
+class Car2 {
+  @Published var kwhInBattery = 100.0
+  let kwhPerKilometer = 0.14
+
+  func drive(kilometers: Double) {
+    var kwhNeeded = kilometers * kwhPerKilometer
+
+    assert(kwhNeeded <= kwhInBattery, "Can't make trip, not enough charge in battery")
+
+    kwhInBattery -= kwhNeeded
+  }
+}
+
+let car2 = Car2()
+
+car2.$kwhInBattery.sink(receiveValue: { currentKwh in
+  print("battery has \(currentKwh) remaining")
+})
+
+car2.drive(kilometers: 100)

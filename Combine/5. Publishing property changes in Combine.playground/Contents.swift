@@ -28,3 +28,30 @@ notificationSubject.sink(receiveValue: { notification in
 })
 
 center.post(name: notificationName, object: nil, userInfo: ["Hello": "World!"])
+
+
+
+// 2. Using a CurrentValueSubject to publish values
+//In many cases where you have a model that's used to drive your UI, you are interested in a concept of state. The model has a current value. It might be a default value or a user-provided value, but there always is a value.
+
+// when you subscribe to a CurrentValueSubject, you immediately get the current value of that subject, and you are notified when subsequent changes happen
+class Car {
+  var kwhInBattery = CurrentValueSubject<Double, Never>(50.0)
+  let kwhPerKilometer = 0.14
+
+  func drive(kilometers: Double) {
+    var kwhNeeded = kilometers * kwhPerKilometer
+
+    assert(kwhNeeded <= kwhInBattery.value, "Can't make trip, not enough charge in battery")
+
+    kwhInBattery.value -= kwhNeeded
+  }
+}
+
+let car = Car()
+
+car.kwhInBattery.sink(receiveValue: { currentKwh in
+  print("battery has \(currentKwh) remaining")
+})
+
+car.drive(kilometers: 200)

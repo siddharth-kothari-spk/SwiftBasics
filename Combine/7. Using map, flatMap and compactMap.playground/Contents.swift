@@ -30,3 +30,22 @@ let optionalPublisher = [1,2,3,nil,4,nil,5,nil].publisher.compactMap{$0}.sink(re
     print("value: \(value)")
   })
 // all nested publishers are squashed and converted to a single publisher that outputs the values from all nested publishers, making it look like a single publisher.
+
+// flatMap(maxPublishers:)
+// Using flatMap(maxPublishers:) makes sure that you only have a fixed number of publishers active. Once one of the publishers created by flatMap completes, the source publisher is asked for the next value which will then also be mapped into a publisher.
+
+["url1", "url2"]
+  .flatMap(maxPublishers: .max(1)) { url in
+    return URLSession.shared.dataTaskPublisher(for: url)
+  }
+
+// The preceding code shows an example where a publisher that emits URLs over time and transforms each emitted URL into a data task publisher. Because maxPublishers is set to .max(1), only one data task publisher can be active at a time. The publisher can choose whether it drops or accumulates generated URLs while flatMap isn't ready to receive them yet.
+
+// A similar effect can be achieved using map and the switchToLatest operator, except this operator ditches the older publishers in favor of the latest one.
+
+["url1", "url2"]
+  .map { url in
+    return URLSession.shared.dataTaskPublisher(for: url)
+  }
+  .switchToLatest()
+//The map in the preceding code transforms URLs into data task publishers, and by applying switchToLatest to the output of this map, any subscribers will only receive values emitted by the lastest publisher that was output by map. This means if aPublisherThatEmitsURLs would emit several URLs in a row, we'd only receive the result of the last emitted URL.

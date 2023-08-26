@@ -29,3 +29,10 @@ createFuture().sink(receiveValue: { value in
 let future = createFuture()
 
 // In addition to immediately executing the closure supplied to the Future's initializer, a Future will only run this closure once. In other words, subscribing to the same Future multiple times will yield the same result every time you subscribe
+
+
+// A Future will begin executing immediately when you create it.
+//A Future will only run its supplied closure once.
+//Subscribing to the same Future multiple times will yield in the same result being returned.
+//A Future in Combine serves a similar purpose as RxSwift's Single but they behave differently.
+

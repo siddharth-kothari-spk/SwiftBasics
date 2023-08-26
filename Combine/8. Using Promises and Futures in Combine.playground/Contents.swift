@@ -93,3 +93,59 @@ extension UNUserNotificationCenter {
 //This second extension on UNUserNotificationCenter adds a new flavor of requestAuthorization(options:) that returns a Future that tells us whether we successfully received notification permissions from a user.
 
 
+// code prior to extensions
+UNUserNotificationCenter.current().getNotificationSettings { settings in
+  switch settings.authorizationStatus {
+  case .denied:
+    DispatchQueue.main.async {
+      // update UI to point user to settings
+    }
+  case .notDetermined:
+    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { result, error in
+      if result == true && error == nil {
+        // We have notification permissions
+      } else {
+        DispatchQueue.main.async {
+          // Something went wrong / we don't have permission.
+          // update UI to point user to settings
+        }
+      }
+    }
+  default:
+    // assume permissions are fine and proceed
+    break
+  }
+}
+// we check the current notification permissions, and we update the UI based on the result.
+
+
+// code after future
+UNUserNotificationCenter.current().getNotificationSettings()
+  .flatMap({ settings -> AnyPublisher<Bool, Never> in
+    switch settings.authorizationStatus {
+    case .denied:
+      return Just(false)
+        .eraseToAnyPublisher()
+    case .notDetermined:
+      return UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
+        .replaceError(with: false)
+        .eraseToAnyPublisher()
+    default:
+      return Just(true)
+        .eraseToAnyPublisher()
+    }
+  })
+  .sink(receiveValue: { hasPermissions in
+    if hasPermissions == false {
+      DispatchQueue.main.async {
+        // point user to settings
+      }
+    }
+  })
+
+/*
+ Get the current notification settings
+ Transform the result to a Bool
+ Update the UI based on whether we have permissions
+ */
+

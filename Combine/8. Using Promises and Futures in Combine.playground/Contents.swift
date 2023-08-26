@@ -36,3 +36,27 @@ let future = createFuture()
 //Subscribing to the same Future multiple times will yield in the same result being returned.
 //A Future in Combine serves a similar purpose as RxSwift's Single but they behave differently.
 
+
+// Deferring Future
+//If we want your Future to  defer its execution until it receives a subscriber, and having the work execute every time you subscribe you can wrap your Future in a Deferred publisher.
+
+func createDeferredFuture() -> AnyPublisher<Int, Never> {
+  return Deferred {
+    Future { promise in
+      print("Closure executed")
+      promise(.success(42))
+    }
+  }.eraseToAnyPublisher()
+}
+
+let deferredFuture = createDeferredFuture()  // nothing happens yet
+
+let sub1 = deferredFuture.sink(receiveValue: { value in
+  print("sub1: \(value)")
+}) // the Future executes because it has a subscriber
+
+let sub2 = deferredFuture.sink(receiveValue: { value in
+  print("sub2: \(value)")
+}) // the Future executes again because it received another subscriber
+
+// The Deferred publisher's initializer takes a closure. We're expected to return a publisher from this closure. In this case we return a Future. The Deferred publisher runs its closure every time it receives a subscriber. This means that a new Future is created every time we subscribe to the Deferred publisher. So the Future still runs only once and executes immediately when it's created, but we defer the creation of the Future to a later time.

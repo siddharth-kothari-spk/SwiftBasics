@@ -21,3 +21,12 @@ let optionalPublisher = [1,2,3,nil,4,nil,5,nil].publisher.compactMap{$0}.sink(re
     print("Received: \(int)")
 })
 
+// flatMap
+// Combine's map operations don't operate on arrays. They operate on publishers. This means that when you map over a publisher you transform its published values one by one. Using compactMap leads to the omission of nil from the published values. If publishers in Combine are analogous to collections when using map and compactMap, then publishers that we can flatten nested publishers with flatMap.
+
+[1, 2, 3].publisher.flatMap({ int in
+  return (0..<int).publisher
+  }).sink(receiveCompletion: { _ in }, receiveValue: { value in
+    print("value: \(value)")
+  })
+// all nested publishers are squashed and converted to a single publisher that outputs the values from all nested publishers, making it look like a single publisher.

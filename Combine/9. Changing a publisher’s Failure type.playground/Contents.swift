@@ -33,3 +33,15 @@ extension Publisher where Output == URLRequest {
 }
 // apply mapError(_:) to self which is the source publisher and to the URLSession.DataTaskPublisher that's created in the flatMap. This way, both publishers emit a generic Error rather than their specialized error.
 
+// An alternative to erasing the error completely could be to map any errors emitted by the source publisher to a failing URLRequest:
+extension Publisher where Output == URLRequest {
+    func performRequest_URLError() -> AnyPublisher<(data: Data, response: URLResponse), URLError> {
+        return self.mapError({ (error: Self.Failure) -> URLError in
+            return URLError(.badURL)
+        })
+        .flatMap({ request in
+            return URLSession.shared.dataTaskPublisher(for: request)
+        })
+        .eraseToAnyPublisher()
+    }
+}

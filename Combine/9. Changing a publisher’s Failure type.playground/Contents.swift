@@ -55,3 +55,16 @@ extension Publisher {
       }).eraseToAnyPublisher()
   }
 }
+
+// using generic error method
+extension Publisher where Output == URLRequest {
+  func performRequest() -> AnyPublisher<(data: Data, response: URLResponse), Error> {
+    return self
+      .genericError()
+      .flatMap({ request in
+        return URLSession.shared.dataTaskPublisher(for: request)
+          .genericError()
+      })
+      .eraseToAnyPublisher()
+  }
+}

@@ -45,3 +45,13 @@ extension Publisher where Output == URLRequest {
         .eraseToAnyPublisher()
     }
 }
+
+// transform the output of any publisher into a generic Error:
+extension Publisher {
+  func genericError() -> AnyPublisher<Self.Output, Error> {
+    return self
+      .mapError({ (error: Self.Failure) -> Error in
+        return error
+      }).eraseToAnyPublisher()
+  }
+}

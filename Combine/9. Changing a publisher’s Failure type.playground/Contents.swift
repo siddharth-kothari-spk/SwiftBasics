@@ -19,3 +19,17 @@ extension Publisher where Output == URLRequest {
 // we know that Publisher.Failure must conform to the Error protocol. This means that we can erase the error type completely, and transform it into a generic Error instead with Combine's mapError(_:)
 
 
+extension Publisher where Output == URLRequest {
+    func performRequest() -> AnyPublisher<(data: Data, response: URLResponse),Error> {
+        return self.mapError({ (error: Self.Failure) -> Error in
+            return error
+        }).flatMap({request in
+            return URLSession.shared.dataTaskPublisher(for: request).mapError({ (error: URLError) -> Error in
+                return error
+            })
+        })
+        .eraseToAnyPublisher()
+    }
+}
+// apply mapError(_:) to self which is the source publisher and to the URLSession.DataTaskPublisher that's created in the flatMap. This way, both publishers emit a generic Error rather than their specialized error.
+

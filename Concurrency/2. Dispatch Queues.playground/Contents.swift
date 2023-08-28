@@ -98,5 +98,14 @@ let queueB = DispatchQueue(label: "queueB")
 let queueC = DispatchQueue(label: "queueC")
 let queueD = DispatchQueue(label: "queueD", attributes: .initiallyInactive, target: queueC)
 queueD.setTarget(queue: queueC) // allowed as 'queueD' was initiallyInactive
+queueD.activate()
 
 let queueE = DispatchQueue(label: "queueE", attributes: [.concurrent, .initiallyInactive], target: queueC) // // allowed as 'queueE' was initiallyInactive
+queueE.setTarget(queue: queueC)
+queueE.async {
+    print("before activate")
+}
+queueE.activate()
+queueE.async {
+    print("after activate")
+}

@@ -89,3 +89,12 @@ b1.async {
     }
 }
 
+
+let queueA = DispatchQueue(label: "queueA")
+let queueB = DispatchQueue(label: "queueB")
+//queueB.setTarget(queue: queueA) // error : cant set target once queue is already active
+
+
+let queueC = DispatchQueue(label: "queueC")
+let queueD = DispatchQueue(label: "queueD", attributes: .initiallyInactive)
+queueD.setTarget(queue: queueC) // allowed as 'queueD' was initiallyInactive

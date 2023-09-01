@@ -74,3 +74,7 @@ dataTaskPublisher
     print(value)
   })
   .store(in: &cancellables)
+
+// use a tryCatch to inspect any errors coming from the data task publisher. If the error matches one of the errors where I want to perform a delayed retry, I return the dataTaskPublisher with a delay applied to it. This will delay the delivery of values from the data task publisher that I return from tryCatch
+
+

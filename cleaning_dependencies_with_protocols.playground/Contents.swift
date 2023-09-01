@@ -51,3 +51,30 @@ struct LoginViewModel {
   }
 }
 
+// While this solves the problem of having large initializers, it doesn’t solve the problem of having to create many dependencies when you’re writing tests. In fact, this problem is now worse because instead of only having to set up the two services that the LoginViewModel depends on, the entire Services container has to be created. It also breaks encapsulation in some ways because LoginViewModel now has implicit access to all services instead of just the ones that it depends on.
+
+// we can overcome it by using best of both worlds by composing protocols together and using a typealias
+
+typealias LoginViewModelServices = LoginService & RegisterService
+
+extension Services: LoginViewModelServices {
+  func login(_ email: String, password: String) -> Promise<Result<User, Error>> {
+    return loginService.login(email, password: password)
+  }
+
+  func register(_ email: String, password: String) -> Promise<Result<User, Error>> {
+    return registerService.register(email, password: password)
+  }
+}
+
+struct LoginViewModel {
+  let services: LoginViewModelServices
+
+  init(services: LoginViewModelServices) {
+    self.services = services
+  }
+}
+
+//The above code defines a typealias that composes the two dependencies that LoginViewModel has into a single definition. Services is then extended to implement proxy methods for the register and login methods, forwarding them directly to the relevant services, making it conform to LoginViewModelServices and only exposing the methods that are required to make the LoginViewModel work.
+
+//This approach neatly wraps up dependencies, making it agnostic of the underlying details of how services are created and managed without exposing too much information to dependent objects. Writing tests for the LoginViewModel is also simplified right now because you can create a single object that conforms to LoginViewModelServices instead of having to create two or more separate objects that might have dependencies of their own.

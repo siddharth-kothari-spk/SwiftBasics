@@ -101,3 +101,9 @@ dataTaskPublisher.share()
   .store(in: &cancellables)
 
 //By applying share() to the dataTaskPublisher a new publisher is created that will execute when it receives its initial subscriber and replays its results for any subsequent subscribers.
+// issues with share()
+//we use a shared publisher as the initial publisher, it will no longer execute its data task and the tryMap that we defined on the dataTaskPublisher earlier is no longer called. The result of the tryMap is cached in the share() and this cached result is immediately emitted when retry resubscribes. This means that share() will re-emit whatever error we received the first time it made its request.
+//The retry operator in Combine will catch any errors that occur upstream and resubscribe to the pipeline so far. This means that any errors that occur above the retry will make it so we resubsribe to dataTaskPublisher.share(). In other words, the tryCatch that we have after dataTaskPublisher.share() will always receive the same error. So if the initial request failed due to being rate limitted and our retried request fails because we couldn't make a request, the tryCatch will still think we ran into a rate limit error and retry the request even though the logic in the tryCatch says we want to throw an error if we encountered something other than DataTaskError.rateLimitted or DataTaskError.serverBusy.
+
+
+

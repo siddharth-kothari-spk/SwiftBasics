@@ -78,3 +78,26 @@ dataTaskPublisher
 // use a tryCatch to inspect any errors coming from the data task publisher. If the error matches one of the errors where I want to perform a delayed retry, I return the dataTaskPublisher with a delay applied to it. This will delay the delivery of values from the data task publisher that I return from tryCatch
 
 
+
+//An incorrect approach to a delayed retry - using share()
+dataTaskPublisher.share()
+  .tryCatch({ error -> AnyPublisher<(data: Data, response: URLResponse), Error> in
+    print("In the tryCatch")
+    switch error {
+    case DataTaskError.rateLimitted, DataTaskError.serverBusy:
+      return dataTaskPublisher
+        .delay(for: 3, scheduler: DispatchQueue.global())
+        .eraseToAnyPublisher()
+    default:
+      throw error
+    }
+  })
+  .retry(2)
+  .sink(receiveCompletion: { completion in
+    print(completion)
+  }, receiveValue: { value in
+    print(value)
+  })
+  .store(in: &cancellables)
+
+//By applying share() to the dataTaskPublisher a new publisher is created that will execute when it receives its initial subscriber and replays its results for any subsequent subscribers.

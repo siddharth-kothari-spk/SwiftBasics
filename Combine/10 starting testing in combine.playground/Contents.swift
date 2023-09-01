@@ -31,4 +31,53 @@ public struct CarViewModel {
 
 // The CarViewModel in this example provides batterySubject publisher and we'll test that it publishes a new value every time we call drive(kilometers:). The drive(kilometers:) method is used to update the Car's kwhInBattery which means that $kwhInBattery should emit a new value, which is then transformed and the transformed value is them emitted by batterySubject.
 
+class CarViewModelTest: XCTestCase {
+  var car: Car!
+  var carViewModel: CarViewModel!
+  var cancellables: Set<AnyCancellable>!
 
+  override func setUp() {
+    car = Car()
+    carViewModel = CarViewModel(car: car)
+    cancellables = []
+  }
+
+  func testCarViewModelEmitsCorrectStrings() {
+    // determine what kwhInBattery would be after driving 10km
+    let newValue: Double = car.kwhInBattery - car.kwhPerKilometer * 10
+
+    // configure an array of expected output
+    var expectedValues = [car.kwhInBattery, newValue].map { doubleValue in
+      return "The car now has \(doubleValue)kwh in its battery"
+    }
+
+    // expectation to be fulfilled when we've received all expected values
+    let receivedAllValues = expectation(description: "all values received")
+
+    // subscribe to the batterySubject to run the test
+      carViewModel.batterySubject.sink(receiveValue: { value in
+          guard  let expectedValue = expectedValues.first else {
+              XCTFail("Received more values than expected.")
+              return
+          }
+          
+          guard expectedValue == value else {
+              XCTFail("Expected received value \(value) to match first expected value \(expectedValue)")
+              return
+          }
+          
+          // remove the first value from the expected values because we no longer need it
+          expectedValues = Array(expectedValues.dropFirst())
+          if expectedValues.isEmpty {
+                  // the  test is completed when we've received all expected values
+                  receivedAllValues.fulfill()
+                }
+              }).store(in: &cancellables)
+
+              // call drive to trigger a second value
+              carViewModel.drive(kilometers: 10)
+
+              // wait for receivedAllValues to be fulfilled
+              waitForExpectations(timeout: 1, handler: nil)
+            }
+          }

@@ -81,3 +81,7 @@ class CarViewModelTest: XCTestCase {
               waitForExpectations(timeout: 1, handler: nil)
             }
           }
+
+//testing my Combine code by comparing an array of expected values to the values that are emitted by batterySubject. The first element in the expectedValues array is always the element that I expect to receive from batterySubject. After receiving a value, I use dropFirst() to create a new expectedValues array with all elements from the old expectedValues array, except for the first value. I drop the first value because I just received that value.
+
+

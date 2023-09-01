@@ -50,4 +50,27 @@ let dataTaskPublisher = URLSession.shared.dataTaskPublisher(for: url)
     return response
   })
 
+// Implementing a delayed retry
+//Since retry doesn't allow us to specify a delay we'll need to come up with a clever solution.
+//Use a catch to capture any errors, and return the initial publisher with a delay from the catch. Then place a retry after the catch operator.
 
+dataTaskPublisher
+  .tryCatch({ error -> AnyPublisher<(data: Data, response: URLResponse), Error> in
+    print("In the tryCatch")
+
+    switch error {
+    case DataTaskError.rateLimitted, DataTaskError.serverBusy:
+      return dataTaskPublisher
+        .delay(for: 3, scheduler: DispatchQueue.global())
+        .eraseToAnyPublisher()
+    default:
+      throw error
+    }
+  })
+  .retry(2)
+  .sink(receiveCompletion: { completion in
+    print(completion)
+  }, receiveValue: { value in
+    print(value)
+  })
+  .store(in: &cancellables)

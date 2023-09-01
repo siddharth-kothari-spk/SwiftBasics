@@ -114,3 +114,60 @@ dataTaskPublisher.share()
 
 //This means that we should get rid of the share() and actually run the network request when the retry resubscribes to dataTaskPublisher while making sure we don't get the extra requests that we wanted to get rid of in the previous section.
 
+//correct way to retry a network request with a delay
+
+// retry will resubscribe to the upstream publisher whenever it encounters an error. This means that a failing network call would trigger our retry even though we only want to retry when we enounter an error that we consider worth retrying the call for.
+
+// we need to make the retry operator think that our network call always succeeds unless we encounter one of our retryable errors. We can do this by converting the network call's output to a Result object that has the data task publisher's output as it's Output and Error as its failure. If the network call comes back with a retryable error, we'll throw an error from tryMap to trigger the retry. Otherwise, we'll return a Swift Result that can hold an error, or our output. This will make it look like everything went well so the retry doesn't trigger, but we'll be able to extract errors later if needed.
+
+let dataTaskPublisher = networkCall
+  .tryMap({ dataTaskOutput -> Result<URLSession.DataTaskPublisher.Output, Error> in
+    print("Received a response, checking status code")
+
+    guard let response = dataTaskOutput.response as? HTTPURLResponse else {
+      return .failure(DataTaskError.invalidResponse) // no retry allowed
+    }
+
+    if response.statusCode == 429 {
+      throw DataTaskError.rateLimitted // retry allowed
+    }
+
+    if response.statusCode == 503 {
+      throw DataTaskError.serverBusy // retry allowed
+    }
+
+    return .success(dataTaskOutput)
+  })
+// IMP:
+//If we would erase this pipeline to AnyPublisher, we'd have the following type for our publisher: AnyPublisher<Result<URLSession.DataTaskPublisher.Output, Error>, Error>. The Error in the Result is what we'll use to send non-retryable errors down the pipeline. The publisher's error is what we'll use for retryable errors.
+
+dataTaskPublisher
+  .catch({ (error: Error) -> AnyPublisher<Result<URLSession.DataTaskPublisher.Output, Error>, Error> in
+    print("In the catch")
+    switch error {
+    case DataTaskError.rateLimitted,
+         DataTaskError.serverBusy:
+      print("Received a retryable error")
+      return Fail(error: error)
+        .delay(for: 3, scheduler: DispatchQueue.main)
+        .eraseToAnyPublisher()
+    default:
+      print("Received a non-retryable error")
+      return Just(.failure(error))
+        .setFailureType(to: Error.self)
+        .eraseToAnyPublisher()
+    }
+  })
+  .retry(2)
+  .tryMap({ result in
+      // Result -> Result.Success or emit Result.Failure
+      return try result.get()
+    })
+    .sink(receiveCompletion: { completion in
+      print(completion)
+    }, receiveValue: { value in
+      print(value)
+    })
+    .store(in: &cancellables)
+            
+//solution that works by delaying the delivery of specific errors rather than attempting to delay the start of the next request. Ultimately that mechanism delays delivery of all results, including success if the initial request failed.

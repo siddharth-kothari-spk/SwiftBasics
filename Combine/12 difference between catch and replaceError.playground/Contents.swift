@@ -28,3 +28,31 @@ URLSession.shared.dataTaskPublisher(for: practicalCombine)
 // In this example I replace any errors emitted by my initial data task publisher with a new data task publisher. Depending on your needs and the emitted error, you can return any kind of publisher you want from your catch. The only thing you need to keep in mind is that the publisher you create must have the same Output and Failure as the publisher that the catch is applied to
 
 
+
+
+
+// When to use replaceError
+// you cannot throw errors in catch. You must always return a valid publisher. If you only want to create a new publisher for a specific error, and otherwise forward the thrown error, you can use tryCatch which allows you to throw errors.
+
+//With replaceError you can provide a default value that's used to replace any thrown error from upstream publishers. Note that this operator changes your Failure type to Never because with this operator in place, it will become impossible for your pipeline to fail. This is different from catch because the publisher you create in the catch operator might still fail.
+
+enum MyError: Error {
+  case failed
+}
+
+var replaceErrorCancellables = Set<AnyCancellable>()
+var subject = PassthroughSubject<Int, Error>()
+
+subject
+  .replaceError(with: 42)
+  .sink(receiveCompletion: { completion in
+    print(completion)
+  }, receiveValue: { int in
+    print(int)
+  })
+  .store(in: &replaceErrorCancellables)
+
+subject.send(1)
+subject.send(2)
+subject.send(completion: .failure(MyError.failed))
+

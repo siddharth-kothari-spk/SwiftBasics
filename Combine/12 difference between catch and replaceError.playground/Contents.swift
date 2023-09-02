@@ -56,3 +56,6 @@ subject.send(1)
 subject.send(2)
 subject.send(completion: .failure(MyError.failed))
 
+// Note that in catch, the publisher that emitted the error that triggered the catch completes when it emits an error. The publisher you return from catch does not have to complete immediately and it replaces the failed publisher completely. So your sink could receive several values after the source publisher failed because the replacement publisher is still active.
+
+

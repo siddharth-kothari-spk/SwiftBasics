@@ -1,6 +1,7 @@
 /// courtsey: https://www.donnywals.com/recursively-execute-a-paginated-network-call-with-combine/
 ///
 import Combine
+import Foundation
 
 // expectation:
 /*
@@ -29,3 +30,27 @@ struct Response {
 struct Item {}
 
 // My loader should keep making more requests until it receives a Response that has its hasMorePages set to false. At that point, the chain is considered complete and the publisher created in loadPages() should emit all fetched values and complete.
+
+// model class
+
+class RecursiveLoader {
+    var requestsMade = 0
+    var cancellables = Set<AnyCancellable>()
+    
+    init() {}
+    
+    private func loadPages() -> AnyPublisher<Response, Never> {
+        // individual network call
+        Future { promise in
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1, execute: DispatchWorkItem(block: {
+                self.requestsMade += 1
+                if self.requestsMade < 5 {
+                    return promise(.success(Response()))
+                }
+                else {
+                    return promise(.success(Response(hasMorePages: false)))
+                }
+            }))
+        }.eraseToAnyPublisher()
+    }
+}

@@ -91,9 +91,20 @@ class RecursiveLoader {
 //      }.eraseToAnyPublisher()
   }
 
-  func initiateLoadSequence() {
-    // do something
-  }
+    func initiateLoadSequence() {
+      loadPage()
+        .sink(receiveValue: { response in
+          self.loadedPagePublisher.send(response)
+
+          if response.hasMorePages == false {
+            self.loadedPagePublisher.send(completion: .finished)
+          } else {
+            self.initiateLoadSequence()
+          }
+        })
+        .store(in: &cancellables)
+    }
+    // In initiateLoadSequence() I call loadPage() and subscribe to the publisher returned by loadPage(). When I receive a response I forward that response to loadedPagePublisher and if we don't have any more pages to load, I complete the loadedPagePublisher so the finishedPublisher emits its array of Item objects. If we do have more pages to load, I call self.initiateLoadSequence() again to load the next page.
 }
 
 
@@ -106,3 +117,4 @@ loader.initialLoadSequence()
 // private loadedPagePublisher is where I decided I would publish pages as they came in from the network.
 // The finishedPublisher takes the loadedPagePublisher and applies the reduce operator. That way, once I complete the loadedPagePublisher, the finsihedPublisher will emit an array of [Item]
 
+// An instance of RecursiveLoader can only load all pages once, and users of this object will need to subscriber to finishedPublisher before calling initiateLoadSequence to prevent dropping events since the loadedPagePublisher will not emit any values if it doesn't have any subscribers. For loadedPagePublisher to have subscribers, users of RecursiveLoader must subscribe to finishedPublisher since that publisher is built upon loadedPagePublisher.

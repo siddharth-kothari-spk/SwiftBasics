@@ -17,3 +17,15 @@ networking.loadPages()
 
 //The tricky bit here is that this means that in loadPages() we'll need to somehow create a publisher that collects the responses from several network calls, bundles them into one big result, and outputs them to the created publisher.
 
+
+
+// model response struct
+
+struct Response {
+  var hasMorePages = true
+  var items = [Item(), Item()]
+}
+
+struct Item {}
+
+// My loader should keep making more requests until it receives a Response that has its hasMorePages set to false. At that point, the chain is considered complete and the publisher created in loadPages() should emit all fetched values and complete.

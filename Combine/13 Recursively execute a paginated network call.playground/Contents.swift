@@ -90,9 +90,24 @@ class RecursiveLoader {
 //          return response.items + allItems
 //      }.eraseToAnyPublisher()
   }
+    
+    private func loadPages() -> AnyPublisher<Response, Never> {
+        // individual network call
+        Future { promise in
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1, execute: DispatchWorkItem(block: {
+                self.requestsMade += 1
+                if self.requestsMade < 5 {
+                    return promise(.success(Response()))
+                }
+                else {
+                    return promise(.success(Response(hasMorePages: false)))
+                }
+            }))
+        }.eraseToAnyPublisher()
+    }
 
     func initiateLoadSequence() {
-      loadPage()
+      loadPages()
         .sink(receiveValue: { response in
           self.loadedPagePublisher.send(response)
 

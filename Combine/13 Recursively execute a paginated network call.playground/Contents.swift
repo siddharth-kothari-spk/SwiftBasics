@@ -39,7 +39,7 @@ class RecursiveLoader {
     
     init() {}
     
-    private func loadPages() -> AnyPublisher<Response, Never> {
+    private func loadPage() -> AnyPublisher<Response, Never> {
         // individual network call
         Future { promise in
             DispatchQueue.global().asyncAfter(deadline: .now() + 0.1, execute: DispatchWorkItem(block: {
@@ -95,7 +95,7 @@ class RecursiveLoader {
 //      }.eraseToAnyPublisher()
   }
     
-    private func loadPages() -> AnyPublisher<Response, Never> {
+    private func loadPage() -> AnyPublisher<Response, Never> {
         // individual network call
         Future { promise in
             DispatchQueue.global().asyncAfter(deadline: .now() + 0.1, execute: DispatchWorkItem(block: {
@@ -156,7 +156,7 @@ class RecursiveLoader {
     
     init() { }
     
-    private func loadPages() -> AnyPublisher<Response, Never> {
+    private func loadPage() -> AnyPublisher<Response, Never> {
         // individual network call
         Future { promise in
             DispatchQueue.global().asyncAfter(deadline: .now() + 0.1, execute: DispatchWorkItem(block: {
@@ -217,3 +217,9 @@ networking.loadPages()
 // performPageLoad(using:) must emit its values asynchrononously. For an implementation like this were you rely on the network that's not a problem. But if you'd modify my loadPage method and remove the delay that I have added before completing my Future, you'll find that a number of items are dropped because the PassthroughSubject didn't forward them into the reduce since the publisher created by loadPage() wasn't set up just yet. The reason for this is that receiveSubscription is called just before the subscription is completely set up and established.
 
 // Additionally, I subscribe to the publisher created by loadPage() in performPageLoad(using:) which is also not ideal, but doesn't directly harm the implementation.
+
+
+// -------------------------------------------------------------------------------------
+// Attempt three
+// -------------------------------------------------------------------------------------
+

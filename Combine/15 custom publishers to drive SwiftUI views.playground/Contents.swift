@@ -71,3 +71,5 @@ class NetworkingObject {
         return Just(100)
     }
 }
+
+// The assign(to:) operator allows you to assign the output from a publisher directly to an @Published property under one condition. The publisher that you apply the assign(to:) on must have Never as its error type. Note that I had to add an & prefix to $names. The reason for this is that assign(to:) receives its target @Published property as an inout parameter, and inout parameters in Swift are always passed with an & prefix.

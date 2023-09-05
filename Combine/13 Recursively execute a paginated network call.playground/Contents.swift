@@ -203,4 +203,12 @@ class RecursiveLoader {
 
 // The performPageLoad(using:) takes a PassthroughSubject<Response, Never> as its argument. Inside of this method, I call loadPage() and subscribe to its result. I then send the received result using the received subject and complete it if there are no more pages to load. If there are more pages to load, I call performPageLoad(using:) again, and pass the same subject along to that method so that next call will also publish its result on the same passthrough subject so I can reduce it into my collection of items.
 
-
+// Usage:
+let networking = RecursiveLoader()
+networking.loadPages()
+  .sink(receiveCompletion: { _ in
+    // handle errors
+  }, receiveValue: { items in
+    print(items)
+  })
+  .store(in: &cancellables)

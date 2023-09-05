@@ -33,6 +33,7 @@ class DataSource1: ObservableObject {
           .receive(on: DispatchQueue.main)
           .sink(receiveValue: { [weak self] names in
             self?.names = names
+              // to subscribe to a publisher just so I could update an @Published property. iOS 13
           })
           .store(in: &cancellables)
       }
@@ -50,3 +51,23 @@ struct NamesList: View {
   }
 }
 
+
+// in iOS 14 we can refactor loadNames() and do much better with the new assign(to:) operator:
+
+class DataSource3: ObservableObject {
+  @Published var names = [String]()
+
+  let networkingObject = NetworkingObject()
+
+  func loadNames() {
+    networkingObject.loadNames()
+      .receive(on: DispatchQueue.main)
+      .assign(to: &$names)
+  }
+}
+
+class NetworkingObject {
+    func loadNames() -> AnyPublisher<Data, Error> {
+        return Just(100)
+    }
+}

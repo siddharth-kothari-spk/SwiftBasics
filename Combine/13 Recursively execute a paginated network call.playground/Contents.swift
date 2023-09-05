@@ -32,7 +32,7 @@ struct Item {}
 // My loader should keep making more requests until it receives a Response that has its hasMorePages set to false. At that point, the chain is considered complete and the publisher created in loadPages() should emit all fetched values and complete.
 
 // model class
-/*
+
 class RecursiveLoader {
     var requestsMade = 0
     var cancellables = Set<AnyCancellable>()
@@ -53,17 +53,7 @@ class RecursiveLoader {
             }))
         }.eraseToAnyPublisher()
     }
-    
-    func finishedPublisher() -> AnyPublisher<Response, Never> {
-        Future {promise in
-            
-        }.eraseToAnyPublisher()
-    }
-    
-    func initialLoadSequence() {
-        
-    }
-}*/
+}
 
 // -------------------------------------------------------------------------------------
 // Attempt one: using reduce operator
@@ -73,9 +63,9 @@ class RecursiveLoader {
 // When you apply reduce to a publisher in Combine you can accumulate all emitted values into one new value that's emitted when the upstream publisher completes.
 // To load all pages I would create an instance of RecursiveLoader, subscribe to a publisher that I'd define as a property on RecursiveLoader and tell it to begin loading
 
-/*
+
 // updating RecursiveLoader
-class RecursiveLoader {
+class RecursiveLoader1 {
   var requestsMade = 0
 
   private let loadedPagePublisher = PassthroughSubject<Response, Never>()
@@ -111,7 +101,7 @@ class RecursiveLoader {
     }
 
     func initiateLoadSequence() {
-      loadPages()
+      loadPage()
         .sink(receiveValue: { response in
           self.loadedPagePublisher.send(response)
 
@@ -127,13 +117,13 @@ class RecursiveLoader {
 }
 
 
-let loader = RecursiveLoader()
-loader.finishedPublisher.sink { items in
+let loader1 = RecursiveLoader1()
+loader1.finishedPublisher.sink { items in
     print("items : \(items.count)")
 }.store(in: &cancellables)
-loader.initialLoadSequence()
+loader1.initialLoadSequence()
 
-*/
+
 
 // private loadedPagePublisher is where I decided I would publish pages as they came in from the network.
 // The finishedPublisher takes the loadedPagePublisher and applies the reduce operator. That way, once I complete the loadedPagePublisher, the finsihedPublisher will emit an array of [Item]
@@ -150,7 +140,8 @@ loader.initialLoadSequence()
 // function loadPages() that would create a publisher in its own scope and then pass that publisher to a function that would load an individual page, and then send its result to loadPagePublisher
 
 // updating RecursiveLoader
-class RecursiveLoader {
+
+class RecursiveLoader2 {
     var requestsMade = 0
     var cancellables = Set<AnyCancellable>()
     
@@ -204,7 +195,7 @@ class RecursiveLoader {
 // The performPageLoad(using:) takes a PassthroughSubject<Response, Never> as its argument. Inside of this method, I call loadPage() and subscribe to its result. I then send the received result using the received subject and complete it if there are no more pages to load. If there are more pages to load, I call performPageLoad(using:) again, and pass the same subject along to that method so that next call will also publish its result on the same passthrough subject so I can reduce it into my collection of items.
 
 // Usage:
-let networking = RecursiveLoader()
+let networking = RecursiveLoader2()
 networking.loadPages()
   .sink(receiveCompletion: { _ in
     // handle errors
@@ -212,6 +203,7 @@ networking.loadPages()
     print(items)
   })
   .store(in: &cancellables)
+
 
 // issues :
 // performPageLoad(using:) must emit its values asynchrononously. For an implementation like this were you rely on the network that's not a problem. But if you'd modify my loadPage method and remove the delay that I have added before completing my Future, you'll find that a number of items are dropped because the PassthroughSubject didn't forward them into the reduce since the publisher created by loadPage() wasn't set up just yet. The reason for this is that receiveSubscription is called just before the subscription is completely set up and established.
@@ -223,3 +215,61 @@ networking.loadPages()
 // Attempt three
 // -------------------------------------------------------------------------------------
 
+// updating Response
+struct Response1 {
+  var hasMorePages = true
+  var items = [Item(), Item()]
+  var nextPageIndex = 0
+}
+
+// updating RecursiveLoader
+class RecursiveLoader3 {
+    init() { }
+    
+    private func loadPage(withIndex index: Int) -> AnyPublisher<Response1, Never> {
+        // this would be the individual network call
+        Future { promise in
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                let nextIndex = index + 1
+                if nextIndex < 5 {
+                    return promise(.success(Response1(nextPageIndex: nextIndex)))
+                } else {
+                    return promise(.success(Response1(hasMorePages: false)))
+                }
+            }
+        }.eraseToAnyPublisher()
+    }
+    // The loader no longer tracks the number of requests it has made. The loadPage() method is now loadPage(withIndex:). This index represents the page that should be loaded
+    
+    func loadPages() -> AnyPublisher<[Item], Never> {
+      let pageIndexPublisher = CurrentValueSubject<Int, Never>(0)
+
+      return pageIndexPublisher
+        .flatMap({ index in
+          return self.loadPage(withIndex: index)
+        })
+        .handleEvents(receiveOutput: { (response: Response1) in
+          if response.hasMorePages {
+            pageIndexPublisher.send(response.nextPageIndex)
+          } else {
+            pageIndexPublisher.send(completion: .finished)
+          }
+        })
+        .reduce([Item](), { allItems, response in
+          return response.items + allItems
+        })
+        .eraseToAnyPublisher()
+    }
+    
+    // Inside loadPages() a CurrentValueSubject is used to drive the loading of pages. Since we want to start loading pages when somebody subscribes to the publisher created by loadPages(), a CurrentValueSubject makes sense because it emits its current (initial) value once it receives a subscriber. The publisher returned by loadPages() applies a flatMap to pageIndexPublisher. Inside of the flatMap, the page index emitted by pageIndexPublisher is used to create a new loadPage publisher that will load the page at a certain index. After the flatMap, handleEvents(receiveOutput:) is used to determine whether the nextPageIndex should be sent through the pageIndexPublisher or if the pageIndexPublisher should be completed. When the nextPageIndex is emitted by the pageIndexPublisher, this triggers another call to loadPage(withIndex:) in the flatMap.
+    
+   // Since we still use a reduce after handleEvents(receiveOutput:), all results from the flatMap are still collected and an array of Item objects is still emitted when pageIndexPublisher completed.
+}
+
+
+// Working:
+//When the publisher that's returned by loadPages() receives a subscriber, pageIndexPublisher immediately emits its initial value: 0. This value is transformed into a publisher using flatMap by returning a publisher created by loadPage(withIndex:). The loadPage(withIndex:) fakes a network requests and produces a Response1 value.
+
+//This Response1 is passed to handleEvents(receiveOutput:), where it's inspected to see if there are more pages to be loaded. If more pages need to be loaded, pageIndexPublisher emits the index for the next page which will be forwarded into flatMap so it can be converted into a new network call. If there are no further pages available, the pageIndexPublisher sends a completion event.
+
+//After the Response1 is inspected by handleEvents(receiveOutput:), it is forwarded to the reduce where the Response1 object's item property is used to build an array of Item objects. The reduce will keep collecting items until the pageIndexPublisher sends its completion event.

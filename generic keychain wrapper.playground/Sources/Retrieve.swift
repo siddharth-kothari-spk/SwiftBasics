@@ -1,7 +1,7 @@
 import Foundation
 
 extension KeychainManager {
-    func retrieveItem<T: Decodable>(
+   public func retrieveItem<T: Decodable>(
        ofClass itemClass: ItemClass,
        key: String, attributes:
        ItemAttributes? = nil) throws -> T {

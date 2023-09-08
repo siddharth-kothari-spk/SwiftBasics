@@ -20,3 +20,44 @@
      Class Key: Indicates a cryptographic item.
      Class Identity: Indicates an identity item.
  */
+
+import Foundation
+
+let apiToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnb2Fsc2J1ZGR5IiwiZXhwIjo2NDA5MjIxMTIwMH0.JoDuSMARI2Ihh8fisiUxfQiP8AE_WFz9Hcogkk8QMcQ"
+
+do {
+   let apiTokenAttributes: KeychainManager.ItemAttributes = [
+      kSecAttrLabel: "ApiToken"
+   ]
+
+   try KeychainManager.shared.saveItem(
+      apiToken,
+      itemClass: .generic,
+      key: "ApiToken",
+      attributes: apiTokenAttributes
+   )
+
+   let token: String = try KeychainManager.shared.retrieveItem(
+      ofClass: .generic,
+      key: "ApiToken",
+      attributes: apiTokenAttributes
+   )
+
+   try KeychainManager.shared.updateItem(
+      with: "new-token-value",
+      ofClass: .generic,
+      key: "ApiToken",
+      attributes: apiTokenAttributes
+   )
+
+   try KeychainManager.shared.deleteItem(
+      ofClass: .generic,
+      key: "ApiToken",
+      attributes: apiTokenAttributes
+   )
+
+} catch let keychainError as KeychainManager.KeychainError {
+   print(keychainError.localizedDescription)
+} catch {
+   print(error)
+}

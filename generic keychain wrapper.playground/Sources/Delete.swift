@@ -1,7 +1,7 @@
 import Foundation
 
 extension KeychainManager {
-    func deleteItem(
+   public func deleteItem(
        ofClass itemClass: ItemClass,
        key: String, attributes:
        ItemAttributes? = nil) throws {

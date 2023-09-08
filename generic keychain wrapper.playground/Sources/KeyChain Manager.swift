@@ -1,10 +1,10 @@
 import Foundation
 
-final class KeychainManager {
+final public class KeychainManager {
   
-   typealias ItemAttributes = [CFString : Any]
+   public typealias ItemAttributes = [CFString : Any]
   
-   static let shared = KeychainManager()
+   public static let shared = KeychainManager()
   
    private init() {}
 }
@@ -27,8 +27,8 @@ final class KeychainManager {
 
 
 extension KeychainManager {
-   enum ItemClass: RawRepresentable {
-      typealias RawValue = CFString
+  public enum ItemClass: RawRepresentable {
+      public typealias RawValue = CFString
 
       case generic
       case password
@@ -36,7 +36,7 @@ extension KeychainManager {
       case cryptography
       case identity
 
-      init?(rawValue: CFString) {
+      public init?(rawValue: CFString) {
          switch rawValue {
          case kSecClassGenericPassword:
             self = .generic
@@ -53,7 +53,7 @@ extension KeychainManager {
          }
       }
 
-      var rawValue: CFString {
+      public var rawValue: CFString {
          switch self {
          case .generic:
             return kSecClassGenericPassword
@@ -74,7 +74,7 @@ extension KeychainManager {
 // error
 
 extension KeychainManager {
-   enum KeychainError: Error {
+   public enum KeychainError: Error {
       case invalidData
       case itemNotFound
       case duplicateItem

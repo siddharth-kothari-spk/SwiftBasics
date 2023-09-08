@@ -1,7 +1,7 @@
 import Foundation
 
 extension KeychainManager {
-    func saveItem<T: Encodable>(
+   public func saveItem<T: Encodable>(
        _ item: T,
        itemClass: ItemClass,
        key: String,

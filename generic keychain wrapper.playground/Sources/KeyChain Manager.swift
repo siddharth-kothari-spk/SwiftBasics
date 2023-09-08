@@ -102,7 +102,7 @@ extension KeychainManager {
 
 extension KeychainManager {
    
-   private func convertError(_ error: OSStatus) -> KeychainError {
+    func convertError(_ error: OSStatus) -> KeychainError {
       switch error {
       case errSecItemNotFound:
          return .itemNotFound
@@ -115,3 +115,9 @@ extension KeychainManager {
       }
    }
 }
+
+// For all four methods that our API will expose, there’re three parameters that we’ll need to ask for:
+
+//The item class that we want to operate with.
+//A key, that is going to uniquely identify, together with the class, the item in the keychain.
+//A set of optional attributes that will help to access the items faster.

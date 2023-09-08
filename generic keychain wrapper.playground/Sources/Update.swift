@@ -9,7 +9,7 @@ extension KeychainManager {
 
        let itemData = try JSONEncoder().encode(item)
 
-           var query: [String : Any] = [
+           var query: KeyChainDictionary = [
           kSecClass as String: itemClass.rawValue,
           kSecAttrAccount as String: key as AnyObject
        ]

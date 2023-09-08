@@ -3,6 +3,7 @@ import Foundation
 final public class KeychainManager {
   
    public typealias ItemAttributes = [CFString : Any]
+    public typealias KeyChainDictionary = [String : Any]
   
    public static let shared = KeychainManager()
   

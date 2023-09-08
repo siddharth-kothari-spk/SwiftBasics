@@ -6,7 +6,7 @@ extension KeychainManager {
        key: String, attributes:
        ItemAttributes? = nil) throws {
 
-           var query: [String : Any] = [
+           var query: KeyChainDictionary = [
           kSecClass as String: itemClass.rawValue,
           kSecAttrAccount as String: key as AnyObject
        ]

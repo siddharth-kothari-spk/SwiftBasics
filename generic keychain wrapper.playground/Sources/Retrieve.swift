@@ -7,7 +7,7 @@ extension KeychainManager {
        ItemAttributes? = nil) throws -> T {
 
        // 1
-       var query: [String: Any] = [
+       var query: KeyChainDictionary = [
           kSecClass as String: itemClass.rawValue,
           kSecAttrAccount as String: key as AnyObject,
           kSecReturnAttributes as String: true,
@@ -34,7 +34,7 @@ extension KeychainManager {
 
        // 6
        guard
-          let keychainItem = item as? [String : Any],
+          let keychainItem = item as? KeyChainDictionary,
           let data = keychainItem[kSecValueData as String] as? Data
        else {
           throw KeychainError.invalidData

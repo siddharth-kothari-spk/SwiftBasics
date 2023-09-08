@@ -97,3 +97,21 @@ extension KeychainManager {
       }
    }
 }
+
+// We’ll get a result of OSStatus type from all four operations. As we want to return our own errors, let’s create a helper function that convert that result type to our custom error.
+
+extension KeychainManager {
+   
+   private func convertError(_ error: OSStatus) -> KeychainError {
+      switch error {
+      case errSecItemNotFound:
+         return .itemNotFound
+      case errSecDataTooLarge:
+         return .invalidData
+      case errSecDuplicateItem:
+         return .duplicateItem
+      default:
+         return .unexpected(error)
+      }
+   }
+}

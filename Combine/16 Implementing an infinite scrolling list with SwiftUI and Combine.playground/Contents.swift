@@ -13,6 +13,10 @@ struct EndlessList: View {
         }
         .padding(.all, 30)
     }
+      // Since I made the ContentDataSource's isLoadingPage property @Published, we can use it to add a loading indicator to the bottom of the list to show the user we're loading a new page in case the page isn't loaded by the time the user reaches the end of the list:
+      if dataSource.isLoadingPage {
+              ProgressView()
+            }
   }
 }
 

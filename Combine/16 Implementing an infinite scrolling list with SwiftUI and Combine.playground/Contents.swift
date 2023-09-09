@@ -78,3 +78,34 @@ class ContentDataSource: ObservableObject {
           .assign(to: $items)
       }
     }
+
+
+//  iOS 13 it's possible to build scrolling lists using ForEach and VStack. Unfortunately, these components don't work well with the technique for building an infinite list that I just demonstrated. A VStack combined with ForEach builds its entire view hierarchy at once rather than lazily like a List does. This would mean that we'd immediately begin loading items from the server and continue to load more until all pages are loaded without any action from the user. This happens because onAppear is called when a view is added to the view hierarchy rather than when the view actually becomes visible.
+
+// iOS 14 introduces a LazyVStack that builds its view hierarchy lazily, which means that new items are added to its layout as the user scrolls. This means that the onAppear method for items created in ForEach is called at a similar time as it is for items inside a List, and that we can use it to build our infinite scrolling list without using a List:
+
+// updated EndlessList
+
+struct EndlessListWithLazyVStack: View {
+  @StateObject var dataSource = ContentDataSource()
+
+  var body: some View {
+    ScrollView {
+      LazyVStack {
+        ForEach(dataSource.items) { item in
+          Text(item.label)
+            .onAppear {
+              dataSource.loadMoreContentIfNeeded(currentItem: item)
+            }
+            .padding(.all, 30)
+        }
+
+        if dataSource.isLoadingPage {
+          ProgressView()
+        }
+      }
+    }
+  }
+}
+
+

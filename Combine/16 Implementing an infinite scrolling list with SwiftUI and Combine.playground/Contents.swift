@@ -1,6 +1,7 @@
 // courtsey: https://www.donnywals.com/implementing-an-infinite-scrolling-list-with-swiftui-and-combine/
 
 import Combine
+import SwiftUI
 
 struct EndlessList: View {
   @StateObject var dataSource = ContentDataSource()
@@ -92,10 +93,10 @@ struct EndlessListWithLazyVStack: View {
   var body: some View {
     ScrollView {
       LazyVStack {
-        ForEach(dataSource.items) { item in
+          ForEach($dataSource.items) { item in
           Text(item.label)
             .onAppear {
-              dataSource.loadMoreContentIfNeeded(currentItem: item)
+              $dataSource.loadMoreContentIfNeeded(currentItem: item)
             }
             .padding(.all, 30)
         }

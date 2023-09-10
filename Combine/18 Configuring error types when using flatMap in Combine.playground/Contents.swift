@@ -82,3 +82,26 @@ strings.publisher
   .flatMap({ url in
     return URLSession.shared.dataTaskPublisher(for: url)
   })
+
+
+// Another flavor of flatMap that was added in iOS 14 is similar but works the other way around. When you have a publisher that can fail and you create a publisher that has Never as its Failure in your flatMap, iOS 14 will now automatically keep the Failure for the resulting publisher equal to the upstream's failure.
+
+//Let's look at an example:
+
+URLSession.shared.dataTaskPublisher(for: someURL)
+  .flatMap({ _ in
+    return Just(10)
+  })
+
+//The publisher created in this code snippet has URLError as its Failure and Int as its Output. Since the publisher created in the flatMap can't fail, Combine knows that the only error that might need to be sent to a subscriber is URLError. It also knows that any output from the upstream is transformed into a publisher that emits Int, and that publisher never fails.
+
+
+//If you have a construct similar to the above and want this to work with iOS 13.0, you need to use setFailureType(to:) inside the flatMap:
+
+URLSession.shared.dataTaskPublisher(for: someURL)
+  .flatMap({ _ -> AnyPublisher<Int, URLError> in
+    return Just(10)
+      .setFailureType(to: URLError.self) // this is required for iOS 13
+      .eraseToAnyPublisher()
+  })
+//The code above ensures that the publisher created in the flatMap has the same error as the upstream error.

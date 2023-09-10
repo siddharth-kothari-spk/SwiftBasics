@@ -76,3 +76,65 @@ extension ImporterResponse {
   }
 }
 
+
+func runImport() {
+  // 1. Build the correct URL
+  var url = URL(string: "https://www.mywebsite.com/datasource")!
+  if let versionToken = self.versionToken {
+    url.appendPathComponent(versionToken)
+  }
+
+  URLSession.shared.dataTaskPublisher(for: url)
+    .map(\.data)
+    .sink(receiveCompletion: { completion in
+      if case .failure(let error) = completion {
+        print("something went wrong: \(error)")
+      }
+    }, receiveValue: { [weak self] data in
+      guard let self = self
+        else { return }
+
+      self.importContext.perform {
+          do {
+              // 2. Decode the response
+              let response = try self.decoder.decode(ImporterResponse.self, from: data)
+              
+              // 3. Store the version token
+              self.versionToken = response.versionToken
+              
+              // 4. Build batch delete requests
+              let deletedEventsPredicate = NSPredicate(format: "id IN %@", response.deleted.events)
+              let deletedEventsRequest: NSFetchRequest<Event> = Event.fetchRequest()
+              deletedEventsRequest.predicate = deletedEventsPredicate
+              let batchDeleteEvents = NSBatchDeleteRequest(fetchRequest: deletedEventsRequest)
+              
+              let deletedLocationsPredicate = NSPredicate(format: "id IN %@", response.deleted.locations)
+              let deletedLocationsRequest: NSFetchRequest<Location> = Location.fetchRequest()
+              deletedLocationsRequest.predicate = deletedLocationsPredicate
+              let batchDeleteLocations = NSBatchDeleteRequest(fetchRequest: deletedLocationsRequest)
+              
+              do {
+                          // 5. Execute deletions
+                          try self.importContext.execute(batchDeleteEvents)
+                          try self.importContext.execute(batchDeleteLocations)
+
+                          // 6. Finish import by calling save() on the import context
+                          try self.importContext.save()
+                        } catch {
+                          print("Something went wrong: \(error)")
+                        }
+                      } catch {
+                        print("Failed to decode json: \(error)")
+                      }
+                    }
+
+                  }).store(in: &cancellables) // store the returned cancellable in a property on `DataImporter`
+              }
+
+lazy var decoder: JSONDecoder = {
+  let decoder = JSONDecoder()
+  decoder.keyDecodingStrategy = .convertFromSnakeCase
+  decoder.userInfo[.managedObjectContext] = importContext
+  return decoder
+}()
+

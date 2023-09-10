@@ -50,3 +50,25 @@ URLSession.shared.dataTaskPublisher(for: someURL)
       .eraseToAnyPublisher()
   })
 
+
+
+/// Fixing "flatMap(maxPublishers:_:) is only available in iOS 14.0 or newer"
+
+//flatMap is slightly more convenient for iOS 14 than it is on iOS 13. Imagine the following code:
+
+let strings = ["https://donnywals.com", "https://practicalcombine.com"]
+strings.publisher
+  .map({ url in URL(string: url)! })
+//The publisher that I created in this code is a publisher that has URL as its Output, and Never as its Failure. Now let's add a flatMap:
+
+let strings2 = ["https://donnywals.com", "https://practicalcombine.com"]
+strings.publisher
+  .map({ url in URL(string: url)! })
+  .flatMap({ url in
+    return URLSession.shared.dataTaskPublisher(for: url)
+  })
+//If you're using Xcode 12, this code will result in the flatMap(maxPublishers:_:) is only available in iOS 14.0 or newer compiler error. While this might seem strange, the underlying reason is the following. When you look at the upstream failure type of Never, and the data task failure which is URLError you'll notice that they don't match up. This is a problem since we had a publisher that never fails, and we're turning it into a publisher that emits URLError.
+
+// In iOS 14, Combine will automatically take the upstream publisher and turn it into a publisher that can fail with, in this case, a URLError.
+
+// This is fine because there's no confusion about what the error should be. We used to have no error at all, and now we have a URLError.

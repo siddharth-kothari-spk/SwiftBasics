@@ -35,6 +35,11 @@ import Foundation
 
 
 class DataImporter {
+    var versionToken: String? {
+        get { UserDefaults.standard.string(forKey: "DataImporter.versionToken") }
+        set { UserDefaults.standard.set(newValue, forKey: "DataImporter.versionToken") }
+      }
+    
   let importContext: NSManagedObjectContext
 
   init(persistentContainer: NSPersistentContainer) {
@@ -55,4 +60,19 @@ class DataImporter {
 
  This is particularly useful if your UI uses an NSFetchedResultsController. When your viewContext does not automatically merge changes from its parent, your NSFetchedResultsController won't automatically update when your background context saves after running your import.
  */
+
+
+struct ImporterResponse: Decodable {
+  let events: [Event]
+  let locations: [Location]
+  let deleted: ImporterResponse.Deleted
+  let versionToken: String
+}
+
+extension ImporterResponse {
+  struct Deleted: Decodable {
+    let events: [Int]
+    let locations: [Int]
+  }
+}
 

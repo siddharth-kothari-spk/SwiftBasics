@@ -72,3 +72,13 @@ strings.publisher
 // In iOS 14, Combine will automatically take the upstream publisher and turn it into a publisher that can fail with, in this case, a URLError.
 
 // This is fine because there's no confusion about what the error should be. We used to have no error at all, and now we have a URLError.
+
+//On iOS 13, Combine did not infer this. We had to explicitly tell Combine that we want the upstream publisher to have URLError (or a different error) as its failure type by calling setFailureType(to:) on it as follows:
+
+let strings3 = ["https://donnywals.com", "https://practicalcombine.com"]
+strings.publisher
+  .map({ url in URL(string: url)! })
+  .setFailureType(to: URLError.self) // this is required for iOS 13
+  .flatMap({ url in
+    return URLSession.shared.dataTaskPublisher(for: url)
+  })

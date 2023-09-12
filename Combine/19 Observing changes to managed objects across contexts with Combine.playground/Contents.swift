@@ -30,3 +30,28 @@ class CoreDataStorage {
 // If you pass the managed object context that makes the changes, you will not receive updates with the implementation I'm about to show you. The reason for that is that the context that makes the changes doesn't merge in its own changes because it already contains them.
 
 
+// If you want to receive updates even if the context that makes changes is also the context that's observed you can use the NSManagedObjectContext.didSaveObjectIDsNotification instead since that will fire for the context that saved (which is the context that made changes) rather than the context that merged in changes.
+
+class CoreDataStorage1 {
+    func publisher<T: NSManagedObject>(for managedObject: T,
+                                       in context: NSManagedObjectContext) -> AnyPublisher<T, Never> {
+
+      let notification = NSManagedObjectContext.didMergeChangesObjectIDsNotification
+      return NotificationCenter.default.publisher(for: notification, object: context)
+        .compactMap({ notification in
+          if let updated = notification.userInfo?[NSUpdatedObjectIDsKey] as? Set<NSManagedObjectID>,
+             updated.contains(managedObject.objectID),
+             let updatedObject = context.object(with: managedObject.objectID) as? T {
+
+            return updatedObject
+          } else {
+            return nil
+          }
+        })
+        .eraseToAnyPublisher()
+    }
+}
+
+// The code above creates a notification publisher for NSManagedObjectContext.didMergeChangesObjectIDsNotification and passes the context argument as the object that should be associated with the notification. This ensures that we only receive and handle notifications that originated in the target context.
+
+//Next, I apply a compactMap to this publisher to grab the notification and check whether it has a list of updated managed object IDs. If it does, I check whether the observed managed object's objectID is in the set, and if it is I pull the managed object into the target context using object(with:). This will retrieve the managed object from the persistent store and associate it with the target context.

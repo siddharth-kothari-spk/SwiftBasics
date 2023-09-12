@@ -154,3 +154,51 @@ class ViewModel2: ObservableObject {
   }
 }
 
+// add one more interesting publisher so we can listen for insertion, updating and deleting of any object that matches a specific managed object subclass
+
+extension CoreDataStorage2 {
+    func publisher2<T: NSManagedObject>(for type: T.Type,
+                                       in context: NSManagedObjectContext,
+                                       changeTypes: [ChangeType]) -> AnyPublisher<[([T], ChangeType)], Never> {
+        let notification = NSManagedObjectContext.didMergeChangesObjectIDsNotification
+        return NotificationCenter.default.publisher(for: notification, object: context)
+            .compactMap({ notification in
+                return changeTypes.compactMap({ type -> ([T], ChangeType)? in
+                    guard let changes = notification.userInfo?[type.userInfoKey] as? Set<NSManagedObjectID> else {
+                        return nil
+                    }
+                    
+                    let objects = changes
+                        .filter({ objectID in objectID.entity == T.entity() })
+                        .compactMap({ objectID in context.object(with: objectID) as? T })
+                    return (objects, type)
+                })
+            })
+            .eraseToAnyPublisher()
+    }
+}
+// This method takes a T.Type rather than a managed object instance as its first argument. By accepting T.Type callers can pass the type of object they want to observe. For example by passing Album.self as the type. The AnyPublisher that we create will return an array of ([T], ChangeType) since we can have multiple changes in a single notification and each change can have multiple managed objects.
+
+
+class ViewMode3: ObservableObject {
+
+  var album: Album? // a managed object subclass
+  private var cancellables = Set<AnyCancellable>()
+
+  init(album: Album, storage: CoreDataStorage2) {
+    self.album = album
+
+    guard let ctx = album.managedObjectContext else {
+      return
+    }
+
+      storage.publisher(for: Album.self, in: storage.viewContext, changeTypes: [.inserted, .updated, .deleted])
+        .sink(receiveValue: { [weak self] changes in
+          self?.storage.viewContext.perform
+            // iterate over changes
+            // make sure to do so on the correct queue if applicable with .perform
+          }
+        })
+        .store(in: &cancellables)
+  }
+}

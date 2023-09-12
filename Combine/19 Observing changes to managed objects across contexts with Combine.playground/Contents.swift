@@ -55,3 +55,29 @@ class CoreDataStorage1 {
 // The code above creates a notification publisher for NSManagedObjectContext.didMergeChangesObjectIDsNotification and passes the context argument as the object that should be associated with the notification. This ensures that we only receive and handle notifications that originated in the target context.
 
 //Next, I apply a compactMap to this publisher to grab the notification and check whether it has a list of updated managed object IDs. If it does, I check whether the observed managed object's objectID is in the set, and if it is I pull the managed object into the target context using object(with:). This will retrieve the managed object from the persistent store and associate it with the target context.
+
+// If the notification doesn't contain updates, or if the notification doesn't contain the appropropriate objectID I return nil. This will ensure that the the publisher doesn't emit anything if we don't have anything to emit since compactMap will prevent any nil values from being delivered to our subscribers.
+
+//Because I want to keep my return type clean I erase the created publisher to AnyPublisher.
+
+
+class ViewModel: ObservableObject {
+
+  var album: Album // a managed object subclass
+  private var cancellables = Set<AnyCancellable>()
+
+  init(album: Album, storage: CoreDataStorage) {
+    self.album = album
+
+    guard let ctx = album.managedObjectContext else {
+      return
+    }
+
+    storage.publisher(for: album, in: ctx)
+      .sink(receiveValue: { [weak self] updatedObject in
+        self?.album = updatedObject
+        self?.objectWillChange.send()
+      })
+      .store(in: &cancellables)
+  }
+}

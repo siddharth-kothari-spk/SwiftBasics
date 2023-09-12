@@ -1,0 +1,32 @@
+// https://www.donnywals.com/observing-changes-to-managed-objects-across-contexts-with-combine/
+
+import Combine
+
+// A common pattern in Core Data is to fetch objects and show them in your UI using one managed object context, and then use another context to update, insert or delete managed objects. There are several ways for you to update your UI in response to these changes, for example by using an NSFetchedResultsController
+
+// We will see a useful technique that allows you to observe specific managed objects across different contexts so you can easily update your UI when, for example, that managed object was changed on a background queue.
+
+// Building a simple managed object observer
+// The simplest way to observe changes in a Core Data store is by listening for one of the various notifications that are posted when changes occur within Core Data.
+
+// NSManagedObjectContext.didSaveObjectsNotification - when a managed object context saved objects,
+// NSManagedObjectContext.didMergeChangesObjectIDsNotification - notified when a specific context merged changes for specific objectIDs into its own context.
+// Typically you will merge changes that occurred on a background context into your view context automatically by setting the automaticallyMergesChangesFromParent property on your persistent container's viewContext to true. This means that whenever a background context saves managed objects, those changes are merged into the viewContext automatically, providing easy access to updated properties and objects.
+
+
+class CoreDataStorage {
+  // configure and create persistent container
+  // viewContext.automaticallyMergesChangesFromParent is set to true
+
+  func publisher<T: NSManagedObject>(for managedObject: T,
+                                     in context: NSManagedObjectContext) -> AnyPublisher<T, Never> {
+
+    // implementation goes here
+  }
+}
+
+// The API is pretty simple and elegant. We can pass the managed object that should be observed to this method, and we can tell it which context should be observed. Note that the context that's expected here is the context that we want to observe, not the context that will make the change. In other words, this will usually be your viewContext since that's the context that will merge in changes from background contexts and trigger a UI update.
+
+// If you pass the managed object context that makes the changes, you will not receive updates with the implementation I'm about to show you. The reason for that is that the context that makes the changes doesn't merge in its own changes because it already contains them.
+
+

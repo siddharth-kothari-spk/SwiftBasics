@@ -22,3 +22,58 @@ func findIndexWithWhere<T>(_ array: [T], value: T) -> Int? where T: Equatable //
     return nil
 }
 
+
+// 2. Adding constraints to associated types
+
+// without where
+protocol Container {
+    associatedtype Item: Equatable
+    var count: Int { get }
+    subscript(i: Int) -> Item { get }
+}
+
+extension Container {
+    func indexOf(item: Item) -> Int? {
+        for i in 0..<count {
+            if self[i] == item {
+                return i
+            }
+        }
+        return nil
+    }
+}
+
+// with where
+// usage 1
+protocol Container1 {
+    associatedtype Item
+    var count: Int { get }
+    subscript(i: Int) -> Item { get }
+}
+
+extension Container1 where Item: Equatable {
+    func indexOf(item: Item) -> Int? {
+        for i in 0..<count where self[i] == item {
+                   return i
+        }
+        return nil
+
+    }
+}
+
+
+// usage 2
+protocol Container2 {
+    associatedtype Item where Item: Equatable
+    var count: Int { get }
+    subscript(i: Int) -> Item { get }
+}
+
+extension Container2 {
+    func indexOf(item: Item) -> Int? {
+        for i in 0..<count where self[i] == item {
+            return i
+        }
+        return nil
+    }
+}

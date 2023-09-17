@@ -77,3 +77,14 @@ extension Container2 {
         return nil
     }
 }
+
+// 3. Adding constraints to function parameters
+// without where
+func isEqual<T: Equatable>(_ a: T, _ b: T) -> Bool {
+    return a == b
+}
+
+// with where
+func isEqual<T>(_ a: T, _ b: T) -> Bool where T: Equatable {
+    return a == b
+}

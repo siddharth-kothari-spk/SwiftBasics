@@ -80,11 +80,53 @@ extension Container2 {
 
 // 3. Adding constraints to function parameters
 // without where
-func isEqual<T: Equatable>(_ a: T, _ b: T) -> Bool {
+func isEqualWithoutWhere<T: Equatable>(_ a: T, _ b: T) -> Bool {
     return a == b
 }
 
 // with where
-func isEqual<T>(_ a: T, _ b: T) -> Bool where T: Equatable {
+func isEqualWithWhere<T>(_ a: T, _ b: T) -> Bool where T: Equatable {
     return a == b
 }
+
+// 4. Add additional conditions to switch statements
+// without where
+
+let grade = 89
+switch grade {
+case 0..<60:
+    print("F")
+case 60..<70:
+    print("D")
+case 70..<80:
+    print("C")
+case 80..<90:
+    print("B")
+case 90...100:
+    if (grade >= 95) {
+        print("A")
+    } else {
+        print("A-")
+    }
+default:
+    fatalError("Invalid grade")
+}
+
+// with where
+switch grade {
+    case 0..<60:
+        print("F")
+    case 60..<70:
+        print("D")
+    case 70..<80:
+        print("C")
+    case 80..<90:
+        print("B")
+    case let g where g >= 95:
+        print("A")
+    case let g where g >= 90 && g < 95:
+        print("A-")
+    default:
+        fatalError("Invalid grade")
+}
+

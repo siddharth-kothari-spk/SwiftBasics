@@ -51,3 +51,43 @@ enum Planet: Int {
 
 let earth = Planet(rawValue: 3)!
 print(earth)
+
+
+// Enums with computed attributes and methods
+
+/// The same as classes and structs, enums can have calculated properties and methods.
+
+enum TemperatureWithMethod {
+    case celsius(Double)
+    case fahrenheit(Double)
+    case kelvin(Double)
+
+    var celsiusValue: Double {
+        switch self {
+        case .celsius(let value):
+            return value
+        case .fahrenheit(let value):
+            return (value - 32) * (5/9)
+        case .kelvin(let value):
+            return value - 273.15
+        }
+    }
+
+    func compare(to otherTemperature: TemperatureWithMethod) -> String {
+        let selfCelsius = self.celsiusValue
+        let otherCelsius = otherTemperature.celsiusValue
+        
+        if selfCelsius > otherCelsius {
+            return "Higher"
+        } else if selfCelsius < otherCelsius {
+            return "Lower"
+        } else {
+            return "Equal"
+        }
+    }
+}
+
+let temp1 = TemperatureWithMethod.fahrenheit(83.0)
+let temp2 = TemperatureWithMethod.celsius(27.0)
+
+print(temp1.compare(to: temp2))

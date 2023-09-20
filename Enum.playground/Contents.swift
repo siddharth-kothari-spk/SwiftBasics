@@ -3,7 +3,7 @@
 // Enums without associated values
 
 ///Enums without associated values are easier to use because they don’t hold any additional data for each scenario.
-enum Day {
+enum Day: CaseIterable {
     case monday
     case tuesday
     case wednesday
@@ -144,3 +144,11 @@ func getActivities(for day: Day) -> [String] {
 
 let dayActivities = getActivities(for: .wednesday)
 print(dayActivities)
+
+// Iterating through the enum cases
+
+///The allCases attribute of an enum allows us to repeatedly loop through all of its cases.
+
+for day in Day.allCases {
+    print(day)
+}

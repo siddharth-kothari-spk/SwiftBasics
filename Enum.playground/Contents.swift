@@ -117,3 +117,30 @@ enum TemperatureWithInitializer {
 
 let temp3 = TemperatureWithInitializer(value: 77.0, scale: "Fahrenheit")
 let temp4 = TemperatureWithInitializer(value: 25.0, scale: "Celsius")
+
+
+// Enume cases as function parameters
+
+///Like any other value, enum cases can be utilized as function parameters.
+
+func getActivities(for day: Day) -> [String] {
+    switch day {
+    case .monday:
+        return ["go to soccer"]
+    case .tuesday:
+        return ["go to library"]
+    case .wednesday:
+        return ["visit friends"]
+    case .thursday:
+        return ["go to arts class"]
+    case .friday:
+        return ["go to shop"]
+    case .saturday:
+        return ["tidy up room"]
+    case .sunday:
+        return ["go to baseball match"]
+    }
+}
+
+let dayActivities = getActivities(for: .wednesday)
+print(dayActivities)

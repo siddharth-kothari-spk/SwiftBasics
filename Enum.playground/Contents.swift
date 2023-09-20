@@ -91,3 +91,29 @@ let temp1 = TemperatureWithMethod.fahrenheit(83.0)
 let temp2 = TemperatureWithMethod.celsius(27.0)
 
 print(temp1.compare(to: temp2))
+
+// Enums with custom initializers
+
+/// In the same way as classes and structs do, enums can likewise have custom initializers. This can be helpful for offering many methods of initializing an enum value.
+
+enum TemperatureWithInitializer {
+    case celsius(Double)
+    case fahrenheit(Double)
+    case kelvin(Double)
+
+    init(value: Double, scale: String) {
+        switch scale.lowercased() {
+        case "celsius":
+            self = .celsius(value)
+        case "fahrenheit":
+            self = .fahrenheit(value)
+        case "kelvin":
+            self = .kelvin(value)
+        default:
+            self = .celsius(value)
+        }
+    }
+}
+
+let temp3 = TemperatureWithInitializer(value: 77.0, scale: "Fahrenheit")
+let temp4 = TemperatureWithInitializer(value: 25.0, scale: "Celsius")

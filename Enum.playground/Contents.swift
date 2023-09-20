@@ -33,3 +33,21 @@ print(tempInFahrenheit)
 let tempInKelvin = Temperature.kelvin(373.0)
 print(tempInKelvin)
 
+// Enums with raw values
+
+/// Raw values, which are connected to each case, are another option for enums. Any type of value, whether Int, String, or Double, can be a raw value.
+
+enum Planet: Int {
+    case mercury = 1
+    case venus
+    case earth
+    case mars
+    case jupiter
+    case saturn
+    case uranus
+    case neptune
+    case pluto
+}
+
+let earth = Planet(rawValue: 3)!
+print(earth)

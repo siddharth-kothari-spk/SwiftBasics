@@ -16,3 +16,18 @@
 // WifiRegex
 // WIFI:S:(?<ssid>[^;]+);(?:T:(?<security>[^;]*);)?P:(?<password>[^;]+);(?:H:(?<hidden>[^;]*);)?;
 
+// SwiftRegex is a relatively new API introduced in iOS 16 that allows you to write and use regular expressions in a more Swift-friendly way.
+
+// Option 1 : Using Regex literals
+
+import Foundation
+let wifi = "WIFI:S:superwificonnection;T:WPA;P:strongpassword;;"
+// You can define a Regex literal by wrapping a regular expression in forward slashes
+
+let regexLiteral = /WIFI:S:(?<ssid>[^;]+);(?:T:(?<security>[^;]*);)?P:(?<password>[^;]+);(?:H:(?<hidden>[^;]*);)?;/
+
+if let result = try? regexLiteral.wholeMatch(in: wifi) {
+    print("SSID: \(result.ssid)")
+    print("Security: \(String(describing: result.security))")
+    print("Password: \(result.password)")
+}

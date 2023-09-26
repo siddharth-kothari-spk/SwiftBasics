@@ -26,8 +26,56 @@ let wifi = "WIFI:S:superwificonnection;T:WPA;P:strongpassword;;"
 
 let regexLiteral = /WIFI:S:(?<ssid>[^;]+);(?:T:(?<security>[^;]*);)?P:(?<password>[^;]+);(?:H:(?<hidden>[^;]*);)?;/
 
-if let result = try? regexLiteral.wholeMatch(in: wifi) {
-    print("SSID: \(result.ssid)")
-    print("Security: \(String(describing: result.security))")
-    print("Password: \(result.password)")
+if let resultRegexLiteral = try? regexLiteral.wholeMatch(in: wifi) {
+    print("SSID: \(resultRegexLiteral.ssid)")
+    print("Security: \(String(describing: resultRegexLiteral.security))")
+    print("Password: \(resultRegexLiteral.password)")
+}
+
+// Option 2: The RegexBuilder APIs allow you to compose a regular expression using a set of result builders that make the code a lot more readable and maintainable.
+
+import RegexBuilder
+
+let ssid = Reference(Substring.self)
+let password = Reference(Substring.self)
+let security = Reference(Substring.self)
+let hidden = Reference(Substring.self)
+
+let regexBuilder = Regex {
+    "WIFI:S:"
+    Capture(as: ssid) {
+        OneOrMore(CharacterClass.anyOf(";").inverted)
+    }
+    ";"
+    Optionally {
+        Regex {
+            "T:"
+            Capture(as: security) {
+                ZeroOrMore(CharacterClass.anyOf(";").inverted)
+            }
+            ";"
+        }
+    }
+    "P:"
+    Capture(as: password) {
+        OneOrMore(CharacterClass.anyOf(";").inverted)
+    }
+    ";"
+    Optionally {
+        Regex {
+            "H:"
+            Capture(as: hidden) {
+                ZeroOrMore(CharacterClass.anyOf(";").inverted)
+            }
+            ";"
+        }
+    }
+    ";"
+}
+    .anchorsMatchLineEndings()
+
+if let resultRegexBuilder = try? regexBuilder.wholeMatch(in: wifi) {
+    print("SSID: \(resultRegexBuilder[ssid])")
+    print("Security: \(resultRegexBuilder[security])")
+    print("Password: \(resultRegexBuilder[password])")
 }

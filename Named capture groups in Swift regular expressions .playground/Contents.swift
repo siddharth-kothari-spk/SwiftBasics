@@ -79,3 +79,47 @@ if let resultRegexBuilder = try? regexBuilder.wholeMatch(in: wifi) {
     print("Security: \(resultRegexBuilder[security])")
     print("Password: \(resultRegexBuilder[password])")
 }
+
+
+// Option 3: Using NSRegularExpression
+
+//NSRegularExpression is an alternative API you can use if you still need to support versions older than iOS 16.
+
+//let pattern = "WIFI:S:(?<ssid>[^;]+);(?:T:(?<security>[^;]*);)?P:(?<password>[^;]+);(?:H:(?<hidden>[^;]*);)?;"
+
+let regexNSRegularExpression = try! NSRegularExpression(
+    pattern: #"WIFI:S:(?<ssid>[^;]+);(?:T:(?<security>[^;]*);)?P:(?<password>[^;]+);(?:H:(?<hidden>[^;]*);)?;"#,
+    options: []
+)
+
+let range = NSRange(wifi.startIndex..<wifi.endIndex, in: wifi)
+
+guard let match = regexNSRegularExpression.firstMatch(in: wifi, options: [], range: range) else {
+        print("no match found")
+        fatalError()
+}
+
+if let ssidRange = Range(match.range(withName: "ssid"),in: wifi),
+   let passwordRange = Range(match.range(withName: "password"), in: wifi) {
+    
+    let security: String? = {
+        guard let range = Range(match.range(withName: "security"), in: wifi) else {
+            return nil
+        }
+        return String(wifi[range])
+    }()
+    
+    
+    let hidden: String? = {
+        guard let range = Range(match.range(withName: "hidden"), in: wifi) else {
+            return nil
+        }
+        return String(wifi[range])
+    }()
+    
+    print("SSID: \(wifi[ssidRange])")
+        print("Password: \(wifi[passwordRange])")
+        print("Security: \(security ?? "not set")")
+        print("Hidden: \(hidden ?? "not set")")
+}
+        

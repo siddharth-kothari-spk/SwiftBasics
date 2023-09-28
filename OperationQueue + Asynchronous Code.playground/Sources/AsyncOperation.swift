@@ -18,7 +18,7 @@ public class AsyncOperation: Operation {
     public var state = State.ready {
         willSet {
             willChangeValue(forKey: newValue.keyPath)
-            willChangeValue(for: state.keyPath)
+           // willChangeValue(for: state.keyPath)
         }
         didSet {
             didChangeValue(forKey: oldValue.keyPath)

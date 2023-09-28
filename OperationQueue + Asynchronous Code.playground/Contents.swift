@@ -41,5 +41,33 @@ operationQueue.addOperation {
 
  In theory, the Operation enters the isFinished state before the Operation itself is executed asynchronously, so we need to develop a technique by which we will be able to manipulate the life cycle of the Operation.
  */
+print("-----------------------")
+let operationQueue2 = OperationQueue()
+operationQueue2.maxConcurrentOperationCount = 1
 
+operationQueue2.addOperation(
+    CompletionOperation { completion in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            print("First async operation2 complete")
+            completion?()
+        }
+        print("First sync operation2 complete")
+    }
+)
 
+operationQueue2.addOperation(
+    CompletionOperation { completion in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            print("Second async operation2 complete")
+            completion?()
+        }
+        print("Second sync operation2 complete")
+    }
+)
+
+/*
+ First sync operation2 complete
+ Second sync operation2 complete
+ First async operation2 complete
+ Second async operation2 complete
+ */

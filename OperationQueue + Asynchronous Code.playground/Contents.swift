@@ -30,3 +30,16 @@ operationQueue.addOperation {
  First async operation complete
  Second async operation complete
  */
+
+/*
+ The Operation itself has four flags by which you can track the life cycle of the operation:
+
+     isReady — indicates whether the Operation can be performed at this time.
+     isExecuting —indicates whether an Operation is currently in progress.
+     isFinished —indicates whether the Operation is currently completed.
+     isCancelled —indicates whether the Operation was cancelled.
+
+ In theory, the Operation enters the isFinished state before the Operation itself is executed asynchronously, so we need to develop a technique by which we will be able to manipulate the life cycle of the Operation.
+ */
+
+

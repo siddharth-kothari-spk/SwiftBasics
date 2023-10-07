@@ -37,3 +37,13 @@ let secondStruct: StructSample = StructSample(firstProperty: "second property")
 print(secondStruct.firstProperty)
 //secondStruct.modifyFirstPropertyMutating() // error: Cannot use mutating member on immutable value: 'secondStruct' is a 'let' constant
 print(secondStruct.firstProperty)
+
+
+
+struct StructSample2 {
+    let firstProperty: String
+    mutating func modifyFirstPropertyMutating() {
+      //  firstProperty = firstProperty.capitalized
+        // error: Cannot assign to property: 'firstProperty' is a 'let' constant
+    }
+}

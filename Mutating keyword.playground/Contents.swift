@@ -38,7 +38,8 @@ print(secondStruct.firstProperty)
 //secondStruct.modifyFirstPropertyMutating() // error: Cannot use mutating member on immutable value: 'secondStruct' is a 'let' constant
 print(secondStruct.firstProperty)
 
-
+let thirdStruct: StructSample = StructSample(firstProperty: "third")
+//thirdStruct.firstProperty = "third updated" // error: Cannot assign to property: 'thirdStruct' is a 'let' constant
 
 struct StructSample2 {
     let firstProperty: String
@@ -47,3 +48,8 @@ struct StructSample2 {
         // error: Cannot assign to property: 'firstProperty' is a 'let' constant
     }
 }
+
+
+
+var fourthStruct: StructSample2 = StructSample2(firstProperty: "fourth")
+//fourthStruct.firstProperty = "fourth updated" // error : Cannot assign to property: 'firstProperty' is a 'let' constant

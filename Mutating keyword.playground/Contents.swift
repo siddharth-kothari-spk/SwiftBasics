@@ -16,4 +16,13 @@ struct StructSample {
         firstProperty = firstProperty.capitalized
     }
     */
+    
+    // The mutating keyword flags our function with the ability to work with our properties as variables
+    mutating func modifyFirstPropertyMutating() {
+        firstProperty = firstProperty.capitalized
+    }
+    
+    /*
+     It’s important to know that our Struct’s properties are still immutable, so why does the Mutating keyword allow us to manipulate our properties? Under the hood Swift makes a new copy of our Struct and assigns our new values to its properties. The original Struct we defined is then replaced by our copied struct. Since Structs are value types, they are always copied when they are assigned to new variables or constants and do not contain a reference to a specific spot in memory.
+     */
 }

@@ -30,10 +30,15 @@ import Foundation
         var total = 0
         func counter() -> Int {
             total += amount
-            print(total)
             return total
         }
         return counter
     }
-    print(addCount(forCount: 10))
+    print(addCount(forCount: 10)) // returns "(Function)"
     // counter doesn't have any paramter but returns Int value
+
+// Capturing by reference
+    // Swift handles memory managemnet involved for capturing values
+    
+    let countByTen = addCount(forCount: 10)
+    print(countByTen()) //prints 10

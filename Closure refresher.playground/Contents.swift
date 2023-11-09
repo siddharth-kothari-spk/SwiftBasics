@@ -42,3 +42,10 @@ import Foundation
     
     let countByTen = addCount(forCount: 10)
     print(countByTen()) //prints 10
+
+// Functions and Closure are Reference Types
+
+let addCountbyTen = countByTen
+print(addCountbyTen()) // prints 20
+
+print(countByTen()) // prints 30

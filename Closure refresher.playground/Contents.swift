@@ -49,3 +49,28 @@ let addCountbyTen = countByTen
 print(addCountbyTen()) // prints 20
 
 print(countByTen()) // prints 30
+
+/*
+    Trailing Closure - Special syntax - Rather than passing in your closure as parameter, you can pass after the function inside the braces()
+    
+    
+    */
+    
+    
+    
+    
+    func closure(action: () -> Void) {
+        print("1.")
+        action()
+        print("end of function")
+    }
+
+    closure {
+        print("2.")
+    }
+
+/* Output
+ 1.
+ 2.
+ end of function
+*/

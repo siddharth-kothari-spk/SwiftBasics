@@ -321,3 +321,21 @@ let data = try? Data(contentsOf: url)
  Hellow Sid
  */
 
+
+// Typealias with Closure
+    public typealias SimpleClosure = () -> ()
+    func execute(closure: SimpleClosure) {
+        print("Executing Closure")
+        closure()
+    }
+
+    let helloClosure: SimpleClosure = {
+        print("Hello World")
+    }
+    execute(closure: helloClosure)
+
+/*
+ Executing Closure
+ Hello World
+ */
+

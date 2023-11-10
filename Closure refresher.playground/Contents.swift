@@ -56,9 +56,6 @@ print(countByTen()) // prints 30
     
     */
     
-    
-    
-    
     func closure(action: () -> Void) {
         print("1.")
         action()
@@ -74,3 +71,18 @@ print(countByTen()) // prints 30
  2.
  end of function
 */
+
+    func closure(action: (String) -> Void) {
+            print("3.")
+            action("Saba")
+            print("end of function")
+        }
+
+    closure { str in
+        print(str)
+    }
+/* Output
+ 3.
+ Saba
+ end of function
+ */

@@ -284,3 +284,40 @@ let data = try? Data(contentsOf: url)
     }
         
     logIfTrue("Sid" > "Nikku")
+
+    // with escaping
+    func delayedPrint(delay: Double, closure: @escaping () -> Void) {
+        print("in func delayedPrint")
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            closure()
+        }
+    }
+
+    print("Start")
+    delayedPrint(delay: 2) {
+        print("Hello World")
+    }
+
+/*
+ Start
+ in func delayedPrint
+ Hello World
+ */
+
+
+    func delayedPrint(delay: Double, closure: @escaping @autoclosure () -> Void) {
+            print("in func delayedPrint")
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                closure()
+            }
+        }
+
+    print("Start 2")
+    delayedPrint(delay: 5, closure: print("Hellow Sid"))
+
+/*
+ Start 2
+ in func delayedPrint
+ Hellow Sid
+ */
+

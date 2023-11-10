@@ -86,3 +86,20 @@ print(countByTen()) // prints 30
  Saba
  end of function
  */
+
+    func makeAddOfTwoNumbers(digits: (Int, Int), onCompletion: (Int) -> Void) {
+            print("4.")
+            let sum = digits.0 + digits.1
+            onCompletion(sum)
+            print("end of function")
+        }
+
+    makeAddOfTwoNumbers(digits: (7,9)) { sum in
+        print(sum)
+    }
+
+/* Output
+ 4.
+ 16
+ end of function
+ */

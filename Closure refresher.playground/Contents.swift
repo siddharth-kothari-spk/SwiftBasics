@@ -103,3 +103,26 @@ print(countByTen()) // prints 30
  16
  end of function
  */
+
+func closure2(action: (String) -> String) {
+    print("5.")
+    print(action("Saba"))
+    print("end of function")
+    }
+    
+    closure2 { str in
+    "return \(str)"
+    }
+// shorthand
+    closure2 {
+        "Catching \($0) value"
+    }
+
+/*
+ 5.
+ return Saba
+ end of function
+ 5.
+ Catching Saba value
+ end of function
+ */

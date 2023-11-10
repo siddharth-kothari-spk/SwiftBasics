@@ -218,3 +218,44 @@ func closure2(action: (String) -> String) {
  SumArray 10
  closure ends
  */
+
+
+/*
+    Escaping Closures
+    When passing closure as argument - preserved to be executed later and function's body gets executed returns the compiler back.
+    As Execution ends, the scope exist and have existence in memory, till the closure gets executed
+    
+    Ways to escaping closure
+    - Storage - Preserve the closure in storage in memory, part of the calling function get executed and return the compiler back
+    - Asynchronous Execution - Executing the closure async on dispatch Queue, queue will hold the closure in memory, to be used for future. - No idea of when the closure gets executed
+
+    Life Cycle
+    - Pass the closure as function argument
+    - Do additional work in func
+    - Func execute async or stored
+    - Func returns compiler back
+*/
+
+let url = URL(string: "https://www.geeksforgeeks.org/")!
+let data = try? Data(contentsOf: url)
+
+
+// Function to call the escaping closure
+    func loadData(completion: @escaping (_ data: Data?) -> Void) {
+        DispatchQueue.global().async {
+            let data = try? Data(contentsOf: url)
+                DispatchQueue.main.async {
+                completion(data)
+            }
+        }
+    }
+
+    loadData { data in
+        guard data != nil else {
+            // Handle error
+            return
+        }
+    }
+    
+    // Print result
+    print("Data loaded")

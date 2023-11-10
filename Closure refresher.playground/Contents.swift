@@ -259,3 +259,28 @@ let data = try? Data(contentsOf: url)
     
     // Print result
     print("Data loaded")
+
+
+/*
+    Autoclosures- Automatically created to wrap a piece of code. way to delay the execution of closure until it is actually needed.
+    Autoclosures - used as arguments to functions where closure is optional or where closure's execution may not be necessary
+    
+    Swift Standard Library uses the following
+    - assert(_:_:file:line:) Function
+    assert(someCondition, "This condition should be true")
+    - precondition(_:_:file:line:)
+    precondition(someCondition, "This precondition should be true")
+    - assertionFailure(_:_:file:line:)
+    assertionFailure("This is a custom assertion failure message")
+    
+*/
+
+    func logIfTrue(_ condition: @autoclosure() -> Bool) {
+        if condition() {
+            print("True")
+        } else {
+            print("False")
+        }
+    }
+        
+    logIfTrue("Sid" > "Nikku")

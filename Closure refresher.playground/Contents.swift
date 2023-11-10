@@ -74,7 +74,7 @@ print(countByTen()) // prints 30
 
     func closure(action: (String) -> Void) {
             print("3.")
-            action("Saba")
+            action("Sid")
             print("end of function")
         }
 
@@ -83,7 +83,7 @@ print(countByTen()) // prints 30
     }
 /* Output
  3.
- Saba
+ Sid
  end of function
  */
 
@@ -106,7 +106,7 @@ print(countByTen()) // prints 30
 
 func closure2(action: (String) -> String) {
     print("5.")
-    print(action("Saba"))
+    print(action("Sid"))
     print("end of function")
     }
     
@@ -120,9 +120,34 @@ func closure2(action: (String) -> String) {
 
 /*
  5.
- return Saba
+ return Sid
  end of function
  5.
  Catching Saba value
+ end of function
+ */
+
+
+// Multiple Arguments
+    
+    func closure3(action: (String, Int) -> String) {
+    print("6.")
+    print(action("Sid", 7))
+    print("end of function")
+    }
+    closure3 { str, value in
+    return "\(str) fav number is \(value)"
+    }
+    
+    closure3 {
+    "My name is \($0) and my fav number is \($1)"
+    }
+
+/*
+ 6.
+ Sid fav number is 7
+ end of function
+ 6.
+ My name is Sid and my fav number is 7
  end of function
  */

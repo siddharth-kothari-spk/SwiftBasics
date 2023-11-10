@@ -166,3 +166,18 @@ func closure2(action: (String) -> String) {
     }
     print(closureEx(7))
 
+
+// Capturing Values in a Closure
+    
+    func incrementer(amount: Int) -> () -> Int {
+        var total = 2
+        let increment: () -> Int = {
+            total += amount
+            return total
+        }
+        return increment
+    }
+    let value = incrementer(amount: 7)
+    print(value()) // 9
+    print(value()) // 16
+    print(value()) // 23

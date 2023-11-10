@@ -339,3 +339,19 @@ let data = try? Data(contentsOf: url)
  Hello World
  */
 
+public typealias SimpleClosure2 = (Int) -> ()
+func execute2(closureA: SimpleClosure2) {
+    print("Executing ClosureA")
+    closureA(100)
+}
+
+let closureA1: SimpleClosure2 = {sum in
+    print("Sum square = \(sum * sum)")
+}
+
+execute2(closureA: closureA1)
+
+/*
+Executing ClosureA
+Sum square = 10000
+*/

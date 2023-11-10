@@ -181,3 +181,40 @@ func closure2(action: (String) -> String) {
     print(value()) // 9
     print(value()) // 16
     print(value()) // 23
+
+
+/* Non-escaping closures
+    
+    Default Closures
+    Preserved to be executed later
+ 
+    Lifecycle of the non-escaping closure:
+    1. Pass the closure as a function argument
+    2. Do additional work and execute
+    3. Function returns.
+ 
+    Benefits:
+    - Immediate Callback
+    - Synchronous Execution
+    
+*/
+
+    func getSum(of array: [Int], completion: (Int) -> Void) {
+            print("closure starts")
+            var sum: Int = 0
+            for i in 0..<array.count {
+            sum += i
+            }
+            print(sum)
+            completion(sum)
+            print("closure ends")
+        }
+    getSum(of: [1,2,3,4,5]) { sum in
+        print("SumArray \(sum)")
+    }
+/*
+ closure starts
+ 10
+ SumArray 10
+ closure ends
+ */

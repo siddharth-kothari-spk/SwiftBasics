@@ -355,3 +355,21 @@ execute2(closureA: closureA1)
 Executing ClosureA
 Sum square = 10000
 */
+
+public typealias SimpleClosure3 = (Int) -> (Int)
+func execute3(closureB: SimpleClosure3) {
+print("Executing ClosureB")
+let cube = closureB(100)
+print("Cube: \(cube)")
+}
+
+let closureB1: SimpleClosure3 = { num in
+return num * num * num
+}
+
+execute3(closureB: closureB1)
+
+/*
+Executing ClosureB
+Cube: 1000000
+*/

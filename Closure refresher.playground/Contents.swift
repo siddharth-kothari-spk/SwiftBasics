@@ -151,3 +151,18 @@ func closure2(action: (String) -> String) {
  My name is Sid and my fav number is 7
  end of function
  */
+
+/*
+    Closure Types
+    - Global Functions
+    - Nested Functions
+    - Closure Expressions
+*/
+
+// Closure Expression -
+    
+    let closureEx: (Int) -> String = { number in
+        return "number is \(number)"
+    }
+    print(closureEx(7))
+

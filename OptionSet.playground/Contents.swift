@@ -58,3 +58,27 @@ struct TaskMultipleSet {
     }
 }
 
+// OptionSet Implementation
+
+//Let’s perform the tasks above but with an OptionSet instead of an enum
+
+struct TaskTypes: OptionSet {
+    let rawValue: Int
+
+    init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+
+    public static let urgent = TaskTypes(rawValue: 1 << 0) // 1
+    public static let notUrgent = TaskTypes(rawValue: 1 << 1) // 2
+    public static let easy = TaskTypes(rawValue: 1 << 2) // 4
+    public static let hard = TaskTypes(rawValue: 1 << 3) // 8
+}
+
+/*
+ When we conform to the OptionSet protocol, it’s required that we provide a rawValue for the structure. According to Apple’s documentation, we can use types that conform to the FixedWidthInteger, such as Int, or UInt8.
+
+ If we look at the urgent property, we see the following pattern: 1 << 0. The left value represents an integer multiplied by two in the power of the value on the right side. To clarify, one should be multiplied by two in the power of zero: 1 * 2⁰ = 1.
+
+ Accordingly, the rawValue for the notUrgent is 1 << 1. So one is being multiplied by two in the power of one: 1 * 2¹ = 2. Because of this bit operation, we have a unique value for each member of a set.
+ */

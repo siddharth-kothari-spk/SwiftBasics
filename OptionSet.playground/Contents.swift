@@ -100,3 +100,9 @@ if taskOptionSet.taskTypes.contains([.notUrgent, .easy]) {
     print("The task is easy and not urgent")
 }
 
+// We can now perform Set-related operations, like intersection:
+let taskOptionSet1 = TaskOptionSet(title: "Urgent but easy task", taskTypes: [.urgent, .easy])
+let taskOptionSet2 = TaskOptionSet(title: "Urgent and hard task", taskTypes: [.urgent, .hard])
+
+print(taskOptionSet1.taskTypes.intersection(taskOptionSet2.taskTypes))
+// Prints a rawValue of 1, because the common member is .urgent

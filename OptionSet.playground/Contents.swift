@@ -106,3 +106,13 @@ let taskOptionSet2 = TaskOptionSet(title: "Urgent and hard task", taskTypes: [.u
 
 print(taskOptionSet1.taskTypes.intersection(taskOptionSet2.taskTypes))
 // Prints a rawValue of 1, because the common member is .urgent
+
+// Or union
+
+let taskOptionSet3 = TaskOptionSet(title: "Urgent task", taskTypes: [.urgent])
+let taskOptionSet4 = TaskOptionSet(title: "Hard task", taskTypes: [.hard])
+
+print(taskOptionSet3.taskTypes.union(taskOptionSet4.taskTypes))
+// This code prints the value of 9, because .urgent corresponds to 1, while .hard corresponds to 8. Their sum is 9, which is unique and can be obtained only when performing union with .urgent and .hard
+
+

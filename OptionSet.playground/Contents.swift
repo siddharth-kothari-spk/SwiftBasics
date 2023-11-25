@@ -82,3 +82,21 @@ struct TaskTypes: OptionSet {
 
  Accordingly, the rawValue for the notUrgent is 1 << 1. So one is being multiplied by two in the power of one: 1 * 2¹ = 2. Because of this bit operation, we have a unique value for each member of a set.
  */
+
+struct TaskOptionSet {
+    let title: String
+    var taskTypes: TaskTypes
+
+    init(title: String, taskTypes: TaskTypes) {
+        self.title = title
+        self.taskTypes = taskTypes
+    }
+}
+
+let taskTypes: TaskTypes = [.notUrgent, .easy]
+let taskOptionSet = TaskOptionSet(title: "Not urgent task", taskTypes: taskTypes)
+
+if taskOptionSet.taskTypes.contains([.notUrgent, .easy]) {
+    print("The task is easy and not urgent")
+}
+

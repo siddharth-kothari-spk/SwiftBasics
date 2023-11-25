@@ -41,3 +41,20 @@ struct TaskMultiple {
 
 let taskMultiple = TaskMultiple(title: "Not urgent and easy task", taskTypes: [.notUrgent, .easy])
 
+// Now, to check if the item is both not urgent and easy, we write this relatively long if statement:
+if taskMultiple.taskTypes.contains(.notUrgent) && taskMultiple.taskTypes.contains(.easy) {
+    print("The item is easy and not urgent")
+}
+
+// We also want the taskTypes array to contain only unique members (no two .notUrgents allowed). So we transform this array into a Set
+
+struct TaskMultipleSet {
+    let title: String
+    let taskTypes: Set<TaskType>
+    
+    init(title: String, taskTypes: [TaskType]) {
+        self.title = title
+        self.taskTypes = Set(taskTypes)
+    }
+}
+

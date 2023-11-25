@@ -27,4 +27,17 @@ struct Task {
 
 let task = Task(title: "Not urgent task", taskType: .notUrgent)
 
+// But what if we want our Item to be both not urgent and easy? We have to make the taskType property an array and change its signature to taskTypes:
+
+struct TaskMultiple {
+    let title: String
+    let taskTypes: [TaskType]
+    
+    init(title: String, taskTypes: [TaskType]) {
+        self.title = title
+        self.taskTypes = taskTypes
+    }
+}
+
+let taskMultiple = TaskMultiple(title: "Not urgent and easy task", taskTypes: [.notUrgent, .easy])
 

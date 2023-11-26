@@ -67,4 +67,18 @@ extension Array where Element: Numeric {
 let numbers = [1, 2, 3, 4, 5]
 let total = numbers.sum() // 15
 
+/*
+ 5. Adding Subscripts
+
+ Extensions can add subscripts to types, providing indexed access to elements. Subscripts are a valuable way to offer more convenient access to specific elements within a type.
+ */
+extension String {
+    subscript(index: Int) -> Character {
+        let charIndex = self.index(self.startIndex, offsetBy: index)
+        return self[charIndex]
+    }
+}
+
+let text2 = "Swift"
+let thirdCharacter = text2[2] // "i"
 

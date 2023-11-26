@@ -82,3 +82,21 @@ extension String {
 let text2 = "Swift"
 let thirdCharacter = text2[2] // "i"
 
+/*
+ 6. Customizing UI Components
+
+ You can use extensions to add custom functionality to UIKit or SwiftUI components, making them more versatile for your app’s specific needs.
+ */
+
+extension UIButton {
+    func makeRounded() {
+        layer.cornerRadius = bounds.height / 2
+        clipsToBounds = true
+    }
+}
+
+let myButton = UIButton(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 50, height: 50)))
+myButton.makeRounded()
+print(myButton.layer.cornerRadius)
+
+

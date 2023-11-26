@@ -18,3 +18,18 @@ extension String {
 
 let text = "Hello, Swift"
 let textLength = text.length // 12
+
+/*
+ 2. Implementing Protocol Conformance
+
+ Extensions can be used to make existing types conform to protocols. This is especially useful when you want to adapt types to specific requirements or when working with libraries that expect conforming types.
+ */
+
+extension Int: CustomStringConvertible {
+    public var description: String {
+        return "Number: \(self)"
+    }
+}
+
+let number = 42
+print(number) // Number: 42

@@ -52,4 +52,19 @@ extension UIColor {
 
 let customColor = UIColor(red: 100, green: 200, blue: 50)
 
+/*
+ 4. Adding Methods
+
+ Extensions can add methods to types, providing new functionality that wasn’t originally part of the type’s definition.
+ */
+
+extension Array where Element: Numeric {
+    func sum() -> Element {
+        return reduce(0, +)
+    }
+}
+
+let numbers = [1, 2, 3, 4, 5]
+let total = numbers.sum() // 15
+
 

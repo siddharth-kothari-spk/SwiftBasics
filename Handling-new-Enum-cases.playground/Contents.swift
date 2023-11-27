@@ -71,5 +71,29 @@ do {
  
  "dataCorrupted(Swift.DecodingError.Context(codingPath: [_JSONKey(stringValue: "Index 1", intValue: 1), CodingKeys(stringValue: "status", intValue: nil)], debugDescription: "Cannot initialize Status from invalid String value inReview", underlyingError: nil))
  "
+ 
+ For this to work, We need to write new initializers from decoder.
  */
 
+extension Status {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let type = try container.decode(String.self)
+        self = .init(rawValue: type) ?? .unknown // magic is here
+    }
+}
+
+extension PriorityLevel {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let type = try container.decode(Int.self)
+        self = .init(rawValue: type) ?? .unknown // magic is here
+    }
+}
+
+/*
+ Now output :
+ 
+ "[__lldb_expr_3.Task(title: "Task #1", status: __lldb_expr_3.Status.new, priorityLevel: __lldb_expr_3.PriorityLevel.medium), __lldb_expr_3.Task(title: "Task #2", status: __lldb_expr_3.Status.unknown, priorityLevel: __lldb_expr_3.PriorityLevel.unknown)]
+ "
+ */

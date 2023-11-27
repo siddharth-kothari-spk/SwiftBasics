@@ -103,4 +103,29 @@ extension PriorityLevel {
  Issue #2: Initializers
 
  Every time when we need to implement an unknown case, we have to implement an initializer via decoder. This code is going to be copy-pasted again and again for each enumeration.
+ 
+ Solution to the Issue #2: Adding an UnknownCaseDecodable protocol
  */
+
+protocol UnknownCaseDecodable: Decodable where Self: RawRepresentable {
+    associatedtype DecodeType: Decodable where DecodeType == RawValue
+    
+    static var unknown: Self { get }
+}
+
+extension UnknownCaseDecodable {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let type = try container.decode(DecodeType.self)
+        self = .init(rawValue: type) ?? Self.unknown
+    }
+}
+
+/*
+ Our protocol conforms to the protocol Decodable.
+ Our protocol is intended only for enumerations, because Self: RawRepresentable.
+ Our protocol is generic. Thus, both of our enumerations can implement this protocol.
+ Our protocol has static variable unknown, since Swift 5.3 enums can use protocol’s static variables as cases: source.
+ Our protocol has a default initializer implementation.
+ */
+

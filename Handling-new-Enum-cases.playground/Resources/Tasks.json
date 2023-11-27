@@ -3,5 +3,10 @@
      "title": "Task #1",
      "status": "new",
      "priorityLevel": 50
-   }
+   },
+     {
+    "title": "Task #1",
+    "status": "inReview",
+    "priorityLevel": 100
+  }
  ]

@@ -43,3 +43,23 @@ do {
 } catch {
     print(error)
 }
+
+/*
+ Issue #1: New cases
+
+ Let’s say we need to add a new status - in review and a new priority level - highest. Let’s add these cases to our JSON.
+ 
+ [
+   {
+     "title": "Task #1",
+     "status": "inReview", <- changed
+     "priorityLevel": 100  <- changed
+   }
+ ]
+ 
+ Now , we get following error:
+ 
+ "dataCorrupted(Swift.DecodingError.Context(codingPath: [_JSONKey(stringValue: "Index 1", intValue: 1), CodingKeys(stringValue: "status", intValue: nil)], debugDescription: "Cannot initialize Status from invalid String value inReview", underlyingError: nil))
+ "
+ */
+

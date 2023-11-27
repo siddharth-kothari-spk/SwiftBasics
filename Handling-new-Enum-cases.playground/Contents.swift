@@ -25,12 +25,14 @@ struct Task: Decodable {
 
 enum Status: String, Decodable {
     case new, inProgress, done
+    case unknown // a safe case
 }
 
 enum PriorityLevel: Int, Decodable {
     case low = 25
     case medium = 50
     case high = 75
+    case unknown // a safe case
 }
 
 do {
@@ -58,6 +60,14 @@ do {
  ]
  
  Now , we get following error:
+ 
+ "dataCorrupted(Swift.DecodingError.Context(codingPath: [_JSONKey(stringValue: "Index 1", intValue: 1), CodingKeys(stringValue: "status", intValue: nil)], debugDescription: "Cannot initialize Status from invalid String value inReview", underlyingError: nil))
+ "
+ 
+ Solution to the Issue #1: Adding an unknown case in both enum
+ case unknown
+ 
+ Now error:
  
  "dataCorrupted(Swift.DecodingError.Context(codingPath: [_JSONKey(stringValue: "Index 1", intValue: 1), CodingKeys(stringValue: "status", intValue: nil)], debugDescription: "Cannot initialize Status from invalid String value inReview", underlyingError: nil))
  "

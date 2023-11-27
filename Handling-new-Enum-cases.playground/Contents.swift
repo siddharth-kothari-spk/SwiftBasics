@@ -23,12 +23,16 @@ struct Task: Decodable {
     let priorityLevel: PriorityLevel
 }
 
-enum Status: String, Decodable {
+enum Status: String, UnknownCaseDecodable {
+    typealias DecodeType = String
+    
     case new, inProgress, done
     case unknown // a safe case
 }
 
-enum PriorityLevel: Int, Decodable {
+enum PriorityLevel: Int, UnknownCaseDecodable {
+    typealias DecodeType = Int
+    
     case low = 25
     case medium = 50
     case high = 75
@@ -75,6 +79,7 @@ do {
  For this to work, We need to write new initializers from decoder.
  */
 
+/*
 extension Status {
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -89,7 +94,7 @@ extension PriorityLevel {
         let type = try container.decode(Int.self)
         self = .init(rawValue: type) ?? .unknown // magic is here
     }
-}
+} */
 
 /*
  Now output :
@@ -111,6 +116,7 @@ protocol UnknownCaseDecodable: Decodable where Self: RawRepresentable {
     associatedtype DecodeType: Decodable where DecodeType == RawValue
     
     static var unknown: Self { get }
+    var rawValue: DecodeType { get } //As far as our enums have rawValue, we don’t need to directly specify the type to conform UnknownCaseDecodable.
 }
 
 extension UnknownCaseDecodable {
@@ -127,5 +133,11 @@ extension UnknownCaseDecodable {
  Our protocol is generic. Thus, both of our enumerations can implement this protocol.
  Our protocol has static variable unknown, since Swift 5.3 enums can use protocol’s static variables as cases: source.
  Our protocol has a default initializer implementation.
+ 
+ Now we dont need Status and PriorityLevel Extensions
+ Now output:
+ 
+ "[__lldb_expr_3.Task(title: "Task #1", status: __lldb_expr_3.Status.new, priorityLevel: __lldb_expr_3.PriorityLevel.medium), __lldb_expr_3.Task(title: "Task #2", status: __lldb_expr_3.Status.unknown, priorityLevel: __lldb_expr_3.PriorityLevel.unknown)]
+ "
  */
 

@@ -97,3 +97,10 @@ extension PriorityLevel {
  "[__lldb_expr_3.Task(title: "Task #1", status: __lldb_expr_3.Status.new, priorityLevel: __lldb_expr_3.PriorityLevel.medium), __lldb_expr_3.Task(title: "Task #2", status: __lldb_expr_3.Status.unknown, priorityLevel: __lldb_expr_3.PriorityLevel.unknown)]
  "
  */
+
+
+/*
+ Issue #2: Initializers
+
+ Every time when we need to implement an unknown case, we have to implement an initializer via decoder. This code is going to be copy-pasted again and again for each enumeration.
+ */

@@ -58,3 +58,43 @@ let byteCountFormatter = ByteCountFormatter()
 byteCountFormatter.countStyle = .file
 
 print("\(byteCountFormatter.string(fromByteCount: 1_000_000_000))")
+
+
+//5. PersonNameComponentsFormatter
+// https://developer.apple.com/documentation/foundation/personnamecomponentsformatter
+
+struct User {
+    let namePrefix: String
+    let givenName: String
+    let familyName: String
+}
+
+let personNameFormatter = PersonNameComponentsFormatter()
+
+extension User {
+    var fullName: String {
+        var components = PersonNameComponents()
+        components.namePrefix = namePrefix
+        components.givenName = givenName
+        components.familyName = familyName
+        return personNameFormatter.string(from: components)
+    }
+}
+
+let user = User(
+    namePrefix: "Mr.",
+    givenName: "सिद्धार्थ",
+    familyName: "Kothari"
+)
+
+user.fullName // Vincent Pradeilles
+
+let koreanLocale = Locale(identifier: "ko_KR")
+personNameFormatter.locale = koreanLocale
+
+user.fullName // Pradeilles Vincent
+
+let bharatLocale = Locale(identifier: "hi_IN")
+personNameFormatter.locale = bharatLocale
+
+user.fullName

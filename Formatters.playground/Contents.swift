@@ -49,3 +49,12 @@ measurementFormatter.locale = Locale(identifier: "en_US")
 
 // Distance is 0.746 mi
 print("Distance is \(measurementFormatter.string(from: measurement))")
+
+
+// 4. ByteCountFormatter
+// https://developer.apple.com/documentation/foundation/bytecountformatter
+
+let byteCountFormatter = ByteCountFormatter()
+byteCountFormatter.countStyle = .file
+
+print("\(byteCountFormatter.string(fromByteCount: 1_000_000_000))")

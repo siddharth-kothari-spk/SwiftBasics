@@ -22,4 +22,8 @@ public extension NetworkRequest {
     }
 }
 
-
+// Network Error
+public enum NetworkError: Error {
+    case httpError(statusCode: Int)
+    case decodingError(Error)
+}

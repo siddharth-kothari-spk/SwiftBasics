@@ -8,7 +8,7 @@ public protocol NetworkResponse: Codable { }
 
 
 // Network Request
-public struct NetworkRequest {
+public struct NetworkRequest<ResponseType: NetworkResponse> {
     let method: HTTPMethod
     let url: URL
     var headers: [String: String]?

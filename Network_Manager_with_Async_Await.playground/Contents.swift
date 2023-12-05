@@ -2,12 +2,12 @@
 
 import Foundation
 
-// Network Response
+// MARK: - Network Response
 // Conform to Codable
 public protocol NetworkResponse: Codable { }
 
 
-// Network Request
+// MARK: - Network Request
 public struct NetworkRequest<ResponseType: NetworkResponse> {
     let method: HTTPMethod
     let url: URL
@@ -22,8 +22,18 @@ public extension NetworkRequest {
     }
 }
 
-// Network Error
+// MARK: - Network Error
 public enum NetworkError: Error {
     case httpError(statusCode: Int)
     case decodingError(Error)
+}
+
+// MARK: - NetworkManager Class
+public class NetworkManager {
+    private let session: URLSession
+    
+    init() {
+        let configuration = URLSessionConfiguration.default
+        session = URLSession(configuration: configuration)
+    }
 }

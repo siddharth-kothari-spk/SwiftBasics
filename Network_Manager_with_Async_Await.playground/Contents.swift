@@ -103,3 +103,18 @@ extension NetworkRequest where ResponseType == [Country] {
 // to add NetworkConformance to the actual Array object
     // This allows the Array to be used as the NetworkResponse in your generics
 extension Array: NetworkResponse where Element : NetworkResponse { }
+
+
+// MARK: - Usage
+
+func exampleUsage() async {
+    let networkManager = NetworkManager()
+
+    do {
+        let countryName = "India" // Replace with the actual country name you want to search
+        let response = try await networkManager.performRequest(.searchCountryByName(countryName))
+        print(response)
+    } catch {
+        print("Error: \(error)")
+    }
+}

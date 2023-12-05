@@ -37,6 +37,8 @@ public class NetworkManager {
         session = URLSession(configuration: configuration)
     }
     
+    // The performRequest function is taking the request as a parameter & extrapolating the NetworkResponse from the generic parameter of the NetworkRequest. From there it’s getting the actual request data from the defined properties. Then it uses the async method session.data(for: URLRequest) to do the actual netowork call. Once it has the response information it can then either throw an error if necessary, or parse the data into the NetworkResponse object.
+    
     func performRequest<ResponseType: NetworkResponse>(_ request: NetworkRequest<ResponseType>) async throws -> ResponseType {
             // Create the URL object
             var urlRequest = URLRequest(url: request.url)

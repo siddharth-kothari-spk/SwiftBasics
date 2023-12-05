@@ -98,3 +98,8 @@ extension NetworkRequest where ResponseType == [Country] {
     }
 }
 
+
+// Extend Array's where Element is NetworkResponse
+// to add NetworkConformance to the actual Array object
+    // This allows the Array to be used as the NetworkResponse in your generics
+extension Array: NetworkResponse where Element : NetworkResponse { }

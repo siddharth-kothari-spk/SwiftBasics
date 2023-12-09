@@ -13,4 +13,11 @@ let urliOS16 = URL(string: "Not an URL")              // -> nil
 let validURLiOS17 = URL(string: "https://google.com") // -> https://google.com
 let urliOS17 = URL(string: "Not an URL")              // -> Not%an%URL
 
+// The new behavior is convenient for new projects because now you can combine your link with, for example, a search string and be calm that it works, even in cases with spaces and Cyrillic
+
+// iOS 16
+let validURLCyrilliciOS16 = URL(string: "https://google.com/клята русня") // -> nil
+
+// iOS 17
+let validURLCyrilliciOS17 = URL(string: "https://google.com/клята русня") // -> https://google.com/%D0%BA%D0%BB%D1%8F%D1%82%D0%B0%20%D1%80%D1%83%D1%81%D0%BD%D1%8F
 

@@ -31,4 +31,8 @@ func setupLabel(with text: String) {
     }
 }
 
+// Apple updated the URL initializer for iOS 17 with a new Bool parameter encodingInvalidCharacters that has a default value (true) — it is what makes the behavior unpredictable. You can revert the old behavior and add false directly:
 
+
+// iOS 17
+let urliOS17encodingInvalidCharacters = URL(string: "Not an URL", encodingInvalidCharacters: false) // => nil

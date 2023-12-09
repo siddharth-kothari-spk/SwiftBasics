@@ -16,8 +16,10 @@ struct AppLogger {
                 line: Int = #line ,
                 separator: String = " ") {
 
+        // the filename where the log started is created here
         let shortFileName = URL(string: file)?.lastPathComponent ?? "---"
         
+        // you create the output of the things you need to log. You can also pass objects conforming to the CustomStringConvertible protocol.
         let output = items.map {
             if let item = $0 as? CustomStringConvertible {
                 return "\(item.description)"
@@ -31,7 +33,8 @@ struct AppLogger {
         let category = "\(shortFileName) - \(function) - line \(line)"
         if !output.isEmpty { msg += "\n\(output)" }
         
-         let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "--", category: category)
+        // here we use the new Logger made by Apple. It just adds your bundle id in the subsystem . You will need it later in the console. For the field category I’ve used the infos of the calling function
+        let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "--", category: category)
         
         switch tag {
             case .error   : logger.error("\(msg)")

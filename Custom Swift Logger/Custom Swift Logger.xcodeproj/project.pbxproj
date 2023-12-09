@@ -17,6 +17,7 @@
 		B186685D2B2449DC006A3DDD /* Custom_Swift_LoggerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B186685C2B2449DC006A3DDD /* Custom_Swift_LoggerUITests.swift */; };
 		B186685F2B2449DC006A3DDD /* Custom_Swift_LoggerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B186685E2B2449DC006A3DDD /* Custom_Swift_LoggerUITestsLaunchTests.swift */; };
 		B186686C2B244A5E006A3DDD /* LogTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B186686B2B244A5E006A3DDD /* LogTag.swift */; };
+		B186686E2B244ACD006A3DDD /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B186686D2B244ACD006A3DDD /* AppLogger.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		B186685C2B2449DC006A3DDD /* Custom_Swift_LoggerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom_Swift_LoggerUITests.swift; sourceTree = "<group>"; };
 		B186685E2B2449DC006A3DDD /* Custom_Swift_LoggerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom_Swift_LoggerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B186686B2B244A5E006A3DDD /* LogTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogTag.swift; sourceTree = "<group>"; };
+		B186686D2B244ACD006A3DDD /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				B186683D2B2449DA006A3DDD /* SceneDelegate.swift */,
 				B186683F2B2449DA006A3DDD /* ViewController.swift */,
 				B186686B2B244A5E006A3DDD /* LogTag.swift */,
+				B186686D2B244ACD006A3DDD /* AppLogger.swift */,
 				B18668412B2449DA006A3DDD /* Main.storyboard */,
 				B18668442B2449DC006A3DDD /* Assets.xcassets */,
 				B18668462B2449DC006A3DDD /* LaunchScreen.storyboard */,
@@ -262,6 +265,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B18668402B2449DA006A3DDD /* ViewController.swift in Sources */,
+				B186686E2B244ACD006A3DDD /* AppLogger.swift in Sources */,
 				B186686C2B244A5E006A3DDD /* LogTag.swift in Sources */,
 				B186683C2B2449DA006A3DDD /* AppDelegate.swift in Sources */,
 				B186683E2B2449DA006A3DDD /* SceneDelegate.swift in Sources */,

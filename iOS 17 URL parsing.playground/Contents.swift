@@ -21,3 +21,14 @@ let validURLCyrilliciOS16 = URL(string: "https://google.com/клята русн�
 // iOS 17
 let validURLCyrilliciOS17 = URL(string: "https://google.com/клята русня") // -> https://google.com/%D0%BA%D0%BB%D1%8F%D1%82%D0%B0%20%D1%80%D1%83%D1%81%D0%BD%D1%8F
 
+// But if you have a code that checks URL for nil, now you can see unpredictable cases that break your logic in iOS 17
+// This code works correctly in iOS 16, but in iOS 17 it sets every string as a URL.
+func setupLabel(with text: String) {
+    if let url = URL(string: text) {
+        // make label tappable
+    } else {
+        // just setup a text
+    }
+}
+
+

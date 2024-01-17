@@ -71,3 +71,45 @@ where C1.Item == C2.Item, C1.Item: Equatable {
 
  With these generic where clauses, the function allItemsMatch(_:_:) can only be called with two containers (C1 and C2) that conform to the Container protocol, have the same associated type for Item, and have items that are Equatable. This provides compile-time safety and ensures that the function can only operate on compatible containers.
  */
+
+
+/*
+ Advanced Generic Constraints:
+
+ Swift allows us to apply more advanced constraints to generic types, including class and protocol composition constraints. These constraints allow us to specify that a generic type parameter must inherit from a specific class or conform to multiple protocols.
+ */
+
+protocol Printable {
+    func printDescription()
+}
+
+class Vehicle {
+    var manufacturer: String
+    
+    init(manufacturer: String) {
+        self.manufacturer = manufacturer
+    }
+}
+
+class Car: Vehicle, Printable {
+    var model: String
+    
+    init(manufacturer: String, model: String) {
+        self.model = model
+        super.init(manufacturer: manufacturer)
+    }
+    
+    func printDescription() {
+        print("Car: \(manufacturer), \(model)")
+    }
+}
+
+func printVehicleDescription<T: Vehicle & Printable>(_ vehicle: T) {
+    vehicle.printDescription()
+}
+
+let myCar = Car(manufacturer: "Tesla", model: "Model 3")
+printVehicleDescription(myCar) // Output: Car: Tesla, Model 3
+
+// In this example, we define a protocol Printable and a class Vehicle. The class Car inherits from Vehicle and conforms to Printable. We then create a generic function printVehicleDescription that takes a type parameter T constrained to both Vehicle and Printable. This ensures that the function can only be called with types that satisfy both constraints.
+

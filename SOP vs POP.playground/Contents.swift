@@ -74,3 +74,76 @@ extension RegularStruct where AdoptedObject == RegularClassStruct {
 
 let onbjectStruct = RegularStruct<RegularClassStruct>()
 print(onbjectStruct.sqrValue(.init(value: 25)))
+
+
+/*
+ 2. Covering all kinds of cases
+
+ To understand how to use structure-oriented approach in practice, let’s consider the most likely cases of using the protocol:
+
+     Computed property
+     Property with getter and setter
+     Static property
+     Regular method
+     Static function
+     Function with associated value
+     Parent protocol function when inheriting protocols
+ */
+
+protocol ProtocolExample: ParentProtocolExample {
+    // 1
+    var getVariable: Int { get }
+    
+    // 2
+    var getSetVariable: Int { get set }
+    
+    // 3
+    static var staticVariable: Int { get }
+    
+    // 4
+    func regularFunction(value: Int) -> Bool
+    
+    // 5
+    static func staticFunction(value: Int) -> Bool
+    
+    // 6
+    associatedtype Value
+    func assosiatedFunction(value: Value) -> Bool
+}
+
+protocol ParentProtocolExample {
+    // 7
+    func inheritedFunction() -> String
+}
+
+
+
+
+
+struct StructExample<AdoptedObject, Value> {
+    // 1
+    var getVariable: (_ object: AdoptedObject) -> Int
+    
+    // 2
+    var setVariable: (_ object: AdoptedObject, Int) -> Void
+    
+    // 3
+    var staticVariable: () -> Int
+    
+    // 4
+    var regularFunction: (_ object: AdoptedObject, _ value: Int) -> Bool
+    
+    // 5
+    var staticFunction: (_ value: Int) -> Bool
+    
+    // 6
+    var assosiatedFunction: (_ object: AdoptedObject, _ value: Value) -> Bool
+    
+    // 7
+    var parentStruct: ParentStructExample<AdoptedObject>
+    var inheritedFunction: () -> String
+}
+
+struct ParentStructExample<AdoptedObject> {
+    var inheritedFunction: () -> String
+}

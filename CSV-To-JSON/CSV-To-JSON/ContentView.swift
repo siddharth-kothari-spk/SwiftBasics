@@ -16,7 +16,8 @@ struct ContentView: View {
                 .foregroundStyle(.tint)
             Text("Hello, world!")
         }.onAppear(perform: {
-            convertCSVIntoArray()
+           // convertCSVIntoArray()
+            print(getCSVData())
         })
         .padding()
     }
@@ -62,6 +63,32 @@ struct ContentView: View {
         
         print(people)
      }
+    
+    func getCSVData() -> Array<String> {
+        do {
+            //locate the file you want to use
+            guard let filepath = Bundle.main.path(forResource: "sample2", ofType: "csv") else {
+                return []
+            }
+
+            //convert that file into one long string
+            var data = ""
+            do {
+                data = try String(contentsOfFile: filepath)
+            } catch {
+                print(error)
+                return []
+            }
+            
+            let parsedCSV: [String] = data.components(
+                separatedBy: "\n"
+            ).map{ $0.components(separatedBy: ",")[0] }
+            return parsedCSV
+        }
+        catch {
+            return []
+        }
+    }
 }
 
 #Preview {

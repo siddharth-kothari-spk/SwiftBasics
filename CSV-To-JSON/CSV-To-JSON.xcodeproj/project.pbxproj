@@ -14,6 +14,8 @@
 		B17307752B66712C005E0F91 /* CSV_To_JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17307742B66712C005E0F91 /* CSV_To_JSONTests.swift */; };
 		B173077F2B66712C005E0F91 /* CSV_To_JSONUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B173077E2B66712C005E0F91 /* CSV_To_JSONUITests.swift */; };
 		B17307812B66712C005E0F91 /* CSV_To_JSONUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17307802B66712C005E0F91 /* CSV_To_JSONUITestsLaunchTests.swift */; };
+		B17307902B667203005E0F91 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = B173078F2B667203005E0F91 /* Person.swift */; };
+		B17307922B6674D3005E0F91 /* sample2.csv in Resources */ = {isa = PBXBuildFile; fileRef = B17307912B6674D3005E0F91 /* sample2.csv */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,8 @@
 		B173077A2B66712C005E0F91 /* CSV-To-JSONUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CSV-To-JSONUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B173077E2B66712C005E0F91 /* CSV_To_JSONUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSV_To_JSONUITests.swift; sourceTree = "<group>"; };
 		B17307802B66712C005E0F91 /* CSV_To_JSONUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSV_To_JSONUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		B173078F2B667203005E0F91 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		B17307912B6674D3005E0F91 /* sample2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample2.csv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,8 @@
 			children = (
 				B17307632B667129005E0F91 /* CSV_To_JSONApp.swift */,
 				B17307652B667129005E0F91 /* ContentView.swift */,
+				B173078F2B667203005E0F91 /* Person.swift */,
+				B17307912B6674D3005E0F91 /* sample2.csv */,
 				B17307672B66712C005E0F91 /* Assets.xcassets */,
 				B17307692B66712C005E0F91 /* Preview Content */,
 			);
@@ -233,6 +239,7 @@
 			files = (
 				B173076B2B66712C005E0F91 /* Preview Assets.xcassets in Resources */,
 				B17307682B66712C005E0F91 /* Assets.xcassets in Resources */,
+				B17307922B6674D3005E0F91 /* sample2.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +264,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B17307902B667203005E0F91 /* Person.swift in Sources */,
 				B17307662B667129005E0F91 /* ContentView.swift in Sources */,
 				B17307642B667129005E0F91 /* CSV_To_JSONApp.swift in Sources */,
 			);

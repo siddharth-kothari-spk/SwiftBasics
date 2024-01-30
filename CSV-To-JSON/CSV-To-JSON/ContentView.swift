@@ -16,8 +16,8 @@ struct ContentView: View {
                 .foregroundStyle(.tint)
             Text("Hello, world!")
         }.onAppear(perform: {
-           // convertCSVIntoArray()
-            print(getCSVData())
+            convertCSVIntoArray()
+           // print(getCSVData())
            // csvFromUrl()
         })
         .padding()

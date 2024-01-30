@@ -13,6 +13,4 @@ struct Person {
      var isRegistered: Bool
  }
 
- var people = [Person]()
-
 

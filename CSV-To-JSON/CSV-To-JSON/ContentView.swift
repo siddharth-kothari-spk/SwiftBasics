@@ -17,7 +17,8 @@ struct ContentView: View {
             Text("Hello, world!")
         }.onAppear(perform: {
            // convertCSVIntoArray()
-            print(getCSVData())
+           // print(getCSVData())
+            csvFromUrl()
         })
         .padding()
     }
@@ -38,7 +39,7 @@ struct ContentView: View {
              print(error)
              return
          }
-         print("data: \(data)")
+        // print("data: \(data)")
          //now split that string into an array of "rows" of data.  Each row is a string.
          var rows = data.components(separatedBy: "\n")
          print("rows: \(rows)")
@@ -88,6 +89,21 @@ struct ContentView: View {
         catch {
             return []
         }
+    }
+    
+    func csvFromUrl() {
+        // https://betterprogramming.pub/simple-csv-parser-using-asyncsequence-7356fd7d800
+        // https://github.com/scottandrew/CSVParser
+        let urlString = "https://files.zillowstatic.com/research/public_csvs/zhvi/Metro_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv?t=1659150579"
+                var encoding = String.Encoding.utf8
+                let content = try? String(contentsOf: URL(string: urlString)!, usedEncoding: &encoding)
+                if let contentArray = content?.components(separatedBy: "\n") {
+                    print("count : \(contentArray.count)")
+                    for data in contentArray {
+                        let contents = data.components(separatedBy: ",")
+                        print(contents)
+                    }
+                }
     }
 }
 

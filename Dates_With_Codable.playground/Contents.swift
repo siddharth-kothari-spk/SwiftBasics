@@ -54,3 +54,40 @@ do {
 } catch {
   print(error)
 }
+
+
+print("------------------------------------")
+// dateDecodingStrategy = .iso8601
+var jsonData2 = """
+[
+    {
+        "title": "Grocery shopping",
+        "date": "2024-03-01T10:00:00+01:00"
+    },
+    {
+        "title": "Dentist appointment",
+        "date": "2024-03-05T14:30:00+01:00"
+    },
+    {
+        "title": "Finish project report",
+        "date": "2024-03-10T23:59:00+01:00"
+    },
+    {
+        "title": "Call plumber",
+        "date": "2024-03-15T08:00:00+01:00"
+    },
+    {
+        "title": "Book vacation",
+        "date": "2024-03-20T20:00:00+01:00"
+    }
+]
+""".data(using: .utf8)!
+
+do {
+  let decoder = JSONDecoder()
+  decoder.dateDecodingStrategy = .iso8601
+  let todos = try decoder.decode([ToDoItem].self, from: jsonData2)
+  print(todos)
+} catch {
+  print(error)
+}

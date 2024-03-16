@@ -34,10 +34,23 @@ struct ToDoItem: Codable {
   let date: Date
 }
 
+// number of seconds since January 1st 2001
+// dateDecodingStrategy = .deferredToDate
 do {
     let decoder = JSONDecoder() // default: deferredToDate
     let todos = try decoder.decode([ToDoItem].self, from: jsonData)
     print(todos)
 } catch {
     print(error)
+}
+
+print("------------------------------------")
+// dateDecodingStrategy = .secondsSince1970
+do {
+  let decoder = JSONDecoder()
+  decoder.dateDecodingStrategy = .secondsSince1970
+  let todos = try decoder.decode([ToDoItem].self, from: jsonData)
+  print(todos)
+} catch {
+  print(error)
 }

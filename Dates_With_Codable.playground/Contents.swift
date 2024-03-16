@@ -91,3 +91,47 @@ do {
 } catch {
   print(error)
 }
+
+
+print("------------------------------------")
+// custom encoding and decoding
+var jsonData3 = """
+[
+    {
+        "title": "Grocery shopping",
+        "date": "2024-03-01"
+    },
+    {
+        "title": "Dentist appointment",
+        "date": "2024-03-05"
+    },
+    {
+        "title": "Finish project report",
+        "date": "2024-03-10"
+    },
+    {
+        "title": "Call plumber",
+        "date": "2024-03-15"
+    },
+    {
+        "title": "Book vacation",
+        "date": "2024-03-20"
+    }
+]
+""".data(using: .utf8)!
+
+do {
+  let decoder = JSONDecoder()
+
+  let formatter = DateFormatter()
+  formatter.dateFormat = "yyyy-MM-dd"
+  formatter.locale = Locale(identifier: "en_US_POSIX")
+  formatter.timeZone = TimeZone(secondsFromGMT: 0)
+
+  decoder.dateDecodingStrategy = .formatted(formatter)
+
+  let todos = try decoder.decode([ToDoItem].self, from: jsonData3)
+  print(todos)
+} catch {
+  print(error)
+}

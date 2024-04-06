@@ -22,6 +22,16 @@ struct Stack<Element> {
   }
 }
 
+
+var stack = Stack<String>()
+print(stack.peek() as Any)
+print(stack.isEmpty)
+
+stack.push("A")
+stack.push("B")
+print(stack.pop() as Any)
+print(stack.isEmpty)
+
 /*
 This code defines a struct named `Stack` that can hold elements of any type. The `items` property is an internal array that stores the elements in the stack.
 
@@ -87,3 +97,13 @@ extension StackViaProtocol: ExpressibleByArrayLiteral {
     storage = elements
   }
 }
+
+var stackViaProtocol: StackViaProtocol<Int> = StackViaProtocol<Int>()
+
+print(stackViaProtocol.description)
+stackViaProtocol.push(100)
+stackViaProtocol.push(200)
+print(stackViaProtocol.description)
+
+print(stackViaProtocol.pop() as Any)
+print(stackViaProtocol.isEmpty)

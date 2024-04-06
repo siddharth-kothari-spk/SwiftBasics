@@ -1,4 +1,21 @@
-public struct Graph<Value> {
+public struct Vertex<Value: Comparable>: Equatable {
+    public static func == (lhs: Vertex<Value>, rhs: Vertex<Value>) -> Bool {
+        lhs.value == rhs.value
+    }
+    
+  public let value: Value
+  public var neighbors: [Vertex<Value>] = []
+
+  public init(value: Value) {
+    self.value = value
+  }
+}
+
+public func ==<T: Equatable>(lhs: Vertex<T>, rhs: Vertex<T>) -> Bool {
+   return lhs.value == rhs.value
+}
+
+public struct Graph<Value: Comparable> {
   private var vertices: [Vertex<Value>] = []
 
   public mutating func addVertex(_ value: Value) {
@@ -52,6 +69,27 @@ computerNetwork.addEdge(from: 1, to: 3)
 computerNetwork.addEdge(from: 2, to: 4)
 
 // Perform DFS traversal starting from Computer A and print visited computer names
+print("Computer A--------")
 computerNetwork.depthFirstSearch(from: 0) { computer in
+  print("Visited: \(computer.value)")
+}
+
+print("Computer B--------")
+computerNetwork.depthFirstSearch(from: 1) { computer in
+  print("Visited: \(computer.value)")
+}
+
+print("Computer C--------")
+computerNetwork.depthFirstSearch(from: 2) { computer in
+  print("Visited: \(computer.value)")
+}
+
+print("Computer D--------")
+computerNetwork.depthFirstSearch(from: 3) { computer in
+  print("Visited: \(computer.value)")
+}
+
+print("Computer E--------")
+computerNetwork.depthFirstSearch(from: 4) { computer in
   print("Visited: \(computer.value)")
 }

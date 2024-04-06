@@ -127,11 +127,12 @@ socialNetwork.addEdge(from: 0, to: 2) // Alice -> Charlie
 socialNetwork.addEdge(from: 1, to: 3) // Bob -> Diana
 socialNetwork.addEdge(from: 2, to: 4) // Charlie -> Eve
 socialNetwork.addEdge(from: 4, to: 5) // Eve -> Sid
-socialNetwork.addEdge(from: 5, to: 6) // Sid -> Dev
-socialNetwork.addEdge(from: 6, to: 7) // Dev -> Prateek
-socialNetwork.addEdge(from: 7, to: 8) // Prateek -> Rishabh
-socialNetwork.addEdge(from: 8, to: 9) // Rishabh -> Kartik
-socialNetwork.addEdge(from: 9, to: 10) // Kartik -> Nikku
+socialNetwork.addEdge(from: 6, to: 5) // Sid <- Dev
+socialNetwork.addEdge(from: 7, to: 6) // Dev <- Prateek
+socialNetwork.addEdge(from: 8, to: 7) // Prateek <- Rishabh
+socialNetwork.addEdge(from: 9, to: 8) // Rishabh <- Kartik
+socialNetwork.addEdge(from: 10, to: 9) // Kartik <- Nikku
+socialNetwork.addEdge(from: 10, to: 0) // Nikku <- Alice
 
 // Perform bidirectional search to find a path from entrance (index 0) to exit (index 10)
 socialNetwork.bidirectionalSearch(from: 0, to: 10) { startCell, endCell in

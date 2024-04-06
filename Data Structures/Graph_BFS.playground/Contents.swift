@@ -1,4 +1,20 @@
-public struct Graph<Value> {
+public struct Vertex<Value: Comparable>: Equatable {
+    public static func == (lhs: Vertex<Value>, rhs: Vertex<Value>) -> Bool {
+        lhs.value == rhs.value
+    }
+    
+  public let value: Value
+  public var neighbors: [Vertex<Value>] = []
+
+  public init(value: Value) {
+    self.value = value
+  }
+}
+
+public func ==<T: Equatable>(lhs: Vertex<T>, rhs: Vertex<T>) -> Bool {
+   return lhs.value == rhs.value
+}
+public struct Graph<Value: Comparable> {
   private var vertices: [Vertex<Value>] = []
 
   public mutating func addVertex(_ value: Value) {
@@ -74,6 +90,28 @@ socialNetwork.addEdge(from: 1, to: 3) // Bob -> Diana
 socialNetwork.addEdge(from: 2, to: 4) // Charlie -> Eve
 
 // Perform BFS traversal starting from Alice and print visited people's names
+print("Alice")
 socialNetwork.breadthFirstSearch(from: 0) { person in
   print("Visited: \(person.value)")
 }
+
+print("Bob")
+socialNetwork.breadthFirstSearch(from: 1) { person in
+  print("Visited: \(person.value)")
+}
+
+print("Charlie")
+socialNetwork.breadthFirstSearch(from: 2) { person in
+  print("Visited: \(person.value)")
+}
+
+print("Diana")
+socialNetwork.breadthFirstSearch(from: 3) { person in
+  print("Visited: \(person.value)")
+}
+
+print("Eve")
+socialNetwork.breadthFirstSearch(from: 4) { person in
+  print("Visited: \(person.value)")
+}
+

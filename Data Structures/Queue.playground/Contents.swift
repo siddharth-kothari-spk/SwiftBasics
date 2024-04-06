@@ -22,6 +22,17 @@ struct Queue<Element> {
   }
 }
 
+var queue: Queue<(Int, String)> =  Queue<(Int, String)>()
+print(queue.isEmpty)
+
+queue.enqueue((100, "A"))
+queue.enqueue((200, "C"))
+
+print(queue.peek() as Any)
+
+queue.dequeue()
+print(queue.peek() as Any)
+
 /*
 This code defines a struct named `Queue` that can hold elements of any type. The `items` property is an internal array that stores the elements in the queue.
 
@@ -71,10 +82,24 @@ struct QueueViaProtocol<Element>: Queueable where Element: Equatable {
     }
     
     func peek() -> Element? {
-        storage.last
+        storage.first
     }
     
     func count() -> Int {
         storage.count
     }
 }
+
+var queueViaProtocol: QueueViaProtocol<String> = QueueViaProtocol<String>()
+print(queueViaProtocol.count())
+
+queueViaProtocol.enqueue("ASD")
+queueViaProtocol.enqueue("DEF")
+print(queueViaProtocol.count())
+
+print(queueViaProtocol.peek() as Any)
+print(queueViaProtocol.count())
+
+queueViaProtocol.dequeue()
+print(queueViaProtocol.peek() as Any)
+print(queueViaProtocol.count())

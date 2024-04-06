@@ -1,6 +1,6 @@
 public class Node<Value> {
   public var value: Value
-  public weak var previous: Node<Value>?
+  public var previous: Node<Value>?
   public var next: Node<Value>?
 
   public init(value: Value) {
@@ -115,22 +115,22 @@ public class DoublyLinkedList<Value> {
 
 // Example usage
 var list = DoublyLinkedList<String>()
-list.append("Apple")
-list.append("Banana")
-list.prepend("Cherry")
+list.append("Apple") // list: Apple
+list.append("Banana") // list: Apple <-> Banana
+list.prepend("Cherry") // list: Cherry <-> Apple <-> Banana
 
 if let node = list.getNode(at: 1) {
-  print(node.value) // Output: Banana
+  print(node.value) // Output: Apple
 }
 
-list.insert(at: 1, value: "Orange")
+list.insert(at: 1, value: "Orange") // list: Cherry <-> Orange <-> Apple <-> Banana
 
 if let node = list.getNode(at: 1) {
   print(node.value) // Output: Orange
 }
 
-list.remove(at: 2)
+list.remove(at: 2) // list: Cherry <-> Orange <-> Banana
 
 if let node = list.getNode(at: 1) {
-  print(node.value) // Output: Banana (Orange removed)
+  print(node.value) // Output: Orange (Apple removed)
 }

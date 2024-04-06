@@ -107,7 +107,7 @@ public struct Queue<Element> {
 
 // Add vertices (maze cells) and edges (connections between cells)
 // ... (code to define the maze structure)
-
+/*
 var socialNetwork = Graph<String>()
 
 socialNetwork.addVertex("Alice")
@@ -138,4 +138,72 @@ socialNetwork.addEdge(from: 10, to: 0) // Nikku <- Alice
 socialNetwork.bidirectionalSearch(from: 0, to: 10) { startCell, endCell in
   print("Found path: \(startCell.value) -> \(endCell.value)")
 }
+*/
+
+// Variation2:
+
+class Graph2 {
+    var adjacencyList: [Int: [Int]] = [:]
+
+    func addEdge(from source: Int, to destination: Int) {
+        if adjacencyList[source] == nil {
+            adjacencyList[source] = []
+        }
+        adjacencyList[source]?.append(destination)
+    }
+
+    func bidirectionalSearch(start: Int, end: Int) -> Bool {
+        var visitedFromStart: Set<Int> = [start]
+        var visitedFromEnd: Set<Int> = [end]
+        var queueFromStart: [Int] = [start]
+        var queueFromEnd: [Int] = [end]
+
+        while !queueFromStart.isEmpty && !queueFromEnd.isEmpty {
+            if let currentFromStart = queueFromStart.first {
+                queueFromStart.removeFirst()
+                if let neighbors = adjacencyList[currentFromStart] {
+                    for neighbor in neighbors {
+                        if visitedFromEnd.contains(neighbor) {
+                            return true // Intersection found, path exists
+                        }
+                        if !visitedFromStart.contains(neighbor) {
+                            visitedFromStart.insert(neighbor)
+                            queueFromStart.append(neighbor)
+                        }
+                    }
+                }
+            }
+
+            if let currentFromEnd = queueFromEnd.first {
+                queueFromEnd.removeFirst()
+                if let neighbors = adjacencyList[currentFromEnd] {
+                    for neighbor in neighbors {
+                        if visitedFromStart.contains(neighbor) {
+                            return true // Intersection found, path exists
+                        }
+                        if !visitedFromEnd.contains(neighbor) {
+                            visitedFromEnd.insert(neighbor)
+                            queueFromEnd.append(neighbor)
+                        }
+                    }
+                }
+            }
+        }
+        return false // No path found
+    }
+}
+
+// Example usage:
+let graph = Graph2()
+graph.addEdge(from: 0, to: 1)
+graph.addEdge(from: 0, to: 2)
+graph.addEdge(from: 1, to: 3)
+graph.addEdge(from: 2, to: 4)
+graph.addEdge(from: 3, to: 5)
+graph.addEdge(from: 4, to: 5)
+
+let startNode = 0
+let endNode = 5
+let isPathExists = graph.bidirectionalSearch(start: startNode, end: endNode)
+print("Path exists between \(startNode) and \(endNode): \(isPathExists)")
 

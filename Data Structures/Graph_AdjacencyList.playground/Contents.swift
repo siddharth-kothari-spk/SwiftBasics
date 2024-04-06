@@ -52,6 +52,10 @@ socialNetwork.addEdge(from: 2, to: 4) // Charlie -> Eve
 // Print the neighbors (friends) for each person
 for (index, vertex) in socialNetwork.vertices.enumerated() {
   print("Person: \(vertex.value)")
+    guard vertex.neighbors.count > 0 else {
+        print("No neighbours")
+        continue
+    }
   print("  Friends:")
   for neighbor in vertex.neighbors {
     print("    \(neighbor.value)")

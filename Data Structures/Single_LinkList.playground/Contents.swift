@@ -2,7 +2,7 @@ import Foundation
 
 public class Node<Value> {
   public var value: Value
-  public weak var next: Node<Value>?
+  public var next: Node<Value>?
 
   public init(value: Value) {
     self.value = value
@@ -26,18 +26,13 @@ public class LinkedList<Value> {
 
   public func append(_ value: Value) {
     let newNode = Node(value: value)
-      print("newNode: \(newNode)")
     if tail == nil {
-      head = newNode
+        head = newNode
         tail = head
-        print("tail is nil , now head points to \(newNode)")
     } else {
-      tail!.next = newNode
+        tail!.next = newNode
         tail = newNode
-        print("tail is not nil, now head ponts to \(head), tail points to \(newNode)")
     }
-   // tail = newNode
-      print("tail : \(tail)")
   }
 
   public func getNode(at index: Int) -> Node<Value>? {
@@ -48,11 +43,9 @@ public class LinkedList<Value> {
 
     var currentNode = head
     var currentIndex = 0
-      print(currentNode, currentIndex)
     while currentNode != nil && currentIndex < index {
       currentNode = currentNode?.next
       currentIndex += 1
-        print(currentNode, currentIndex)
     }
     return currentNode
   }
@@ -106,14 +99,10 @@ list.append("Apple")
 list.append("Banana")
 list.append("Cherry")
 
-//print(list.description())
 
-//if let node = list.getNode(at: 1) {
-//  print(node.description) // Output: Banana
-//}
-
-let node = list.getNode(at: 1)
-print(node?.description)
+if let node = list.getNode(at: 1) {
+  print(node.description) // Output: Banana
+}
 
 list.removeNode(at: 1)
 

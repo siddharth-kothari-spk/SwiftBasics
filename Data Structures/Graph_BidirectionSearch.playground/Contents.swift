@@ -1,4 +1,21 @@
-public struct Graph<Value> {
+public struct Vertex<Value: Comparable>: Equatable {
+    public static func == (lhs: Vertex<Value>, rhs: Vertex<Value>) -> Bool {
+        lhs.value == rhs.value
+    }
+    
+  public let value: Value
+  public var neighbors: [Vertex<Value>] = []
+
+  public init(value: Value) {
+    self.value = value
+  }
+}
+
+public func ==<T: Equatable>(lhs: Vertex<T>, rhs: Vertex<T>) -> Bool {
+   return lhs.value == rhs.value
+}
+
+public struct Graph<Value: Comparable> {
   private var vertices: [Vertex<Value>] = []
 
   public mutating func addVertex(_ value: Value) {
@@ -57,7 +74,7 @@ public struct Graph<Value> {
         for neighbor in current2.neighbors {
           let neighborIndex = vertices.firstIndex(of: neighbor)!
           if visited1[neighborIndex] {
-            visit(current1, neighbor)
+            visit(current2, neighbor)
             return // Found a meeting point
           }
           if !visited2[neighborIndex] {
@@ -71,17 +88,53 @@ public struct Graph<Value> {
 }
 
 public struct Queue<Element> {
-  // ... same Queue implementation as before
+  private var items: [Element] = []
+
+  public mutating func enqueue(_ element: Element) {
+    items.append(element)
+  }
+
+  public mutating func dequeue() -> Element? {
+    guard !items.isEmpty else { return nil }
+    return items.removeFirst()
+  }
+
+  public var isEmpty: Bool {
+    return items.isEmpty
+  }
 }
 
-
-// Define a graph to represent a maze
-var maze = Graph<String>()
 
 // Add vertices (maze cells) and edges (connections between cells)
 // ... (code to define the maze structure)
 
+var socialNetwork = Graph<String>()
+
+socialNetwork.addVertex("Alice")
+socialNetwork.addVertex("Bob")
+socialNetwork.addVertex("Charlie")
+socialNetwork.addVertex("Diana")
+socialNetwork.addVertex("Eve")
+socialNetwork.addVertex("Sid")
+socialNetwork.addVertex("Dev")
+socialNetwork.addVertex("Prateek")
+socialNetwork.addVertex("Rishabh")
+socialNetwork.addVertex("Kartik")
+socialNetwork.addVertex("Nikku")
+
+socialNetwork.addEdge(from: 0, to: 1) // Alice -> Bob
+socialNetwork.addEdge(from: 0, to: 2) // Alice -> Charlie
+socialNetwork.addEdge(from: 1, to: 3) // Bob -> Diana
+socialNetwork.addEdge(from: 2, to: 4) // Charlie -> Eve
+socialNetwork.addEdge(from: 4, to: 5) // Eve -> Sid
+socialNetwork.addEdge(from: 5, to: 6) // Sid -> Dev
+socialNetwork.addEdge(from: 6, to: 7) // Dev -> Prateek
+socialNetwork.addEdge(from: 7, to: 8) // Prateek -> Rishabh
+socialNetwork.addEdge(from: 8, to: 9) // Rishabh -> Kartik
+socialNetwork.addEdge(from: 9, to: 10) // Kartik -> Nikku
+
 // Perform bidirectional search to find a path from entrance (index 0) to exit (index 10)
-maze.bidirectionalSearch(from: 0, to: 10) { startCell, endCell in
+socialNetwork.bidirectionalSearch(from: 0, to: 10) { startCell, endCell in
   print("Found path: \(startCell.value) -> \(endCell.value)")
 }
+

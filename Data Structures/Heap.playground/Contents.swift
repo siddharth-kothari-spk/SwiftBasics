@@ -1,6 +1,6 @@
 public struct Heap<Element: Comparable> {
   private var elements: [Element] = []
-
+  public var heapType: HeapType?
   public var isEmpty: Bool {
     return elements.isEmpty
   }
@@ -55,6 +55,33 @@ public struct Heap<Element: Comparable> {
 
   // This function defines the order relation for the heap (Min Heap by default)
   private func isOrdered(_ element1: Element, _ element2: Element) -> Bool {
-    return element1 < element2 // Min Heap
+      switch heapType {
+      case .maxHeap:
+          return element1 < element2
+      default:
+          return element1 > element2
+      }
   }
 }
+
+public enum HeapType {
+    case minHeap
+    case maxHeap
+}
+
+var heap: Heap<Int> = Heap<Int>()
+heap.heapType = .maxHeap
+
+heap.insert(100)
+heap.insert(50)
+heap.insert(150)
+heap.insert(200)
+heap.insert(25)
+heap.insert(75)
+print(heap.peek)
+heap.remove()
+print(heap.peek)
+
+
+
+

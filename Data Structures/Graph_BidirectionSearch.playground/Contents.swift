@@ -201,6 +201,8 @@ graph.addEdge(from: 1, to: 3)
 graph.addEdge(from: 2, to: 4)
 graph.addEdge(from: 3, to: 5)
 graph.addEdge(from: 4, to: 5)
+graph.addEdge(from: 5, to: 4)
+graph.addEdge(from: 4, to: 3)
 
 let startNode = 0
 let endNode = 5

@@ -35,4 +35,29 @@ print(sid1 == sid2) // Error: Cannot convert value of type 'Employee<Sales>' to 
 
 // we aren’t comparing two instances of Employee any more, we’re comparing an Employee<Programmer> and an Employee<Sales>, and Swift considers them to be different. In comparison, if we had made someone’s role a string property, Swift would say that the two Zoe’s are different at runtime, but it wouldn’t stop us from compiling.
 
+// Example :
 
+enum OPositive { }
+enum APositive { }
+enum BPositive { }
+
+struct BloodSample<Type> {
+    let amount: Double
+
+    static func +(lhs: BloodSample, rhs: BloodSample) -> BloodSample {
+        BloodSample(amount: lhs.amount + rhs.amount)
+    }
+}
+
+// That has a + operator that lets us combine two blood samples, but Swift will automatically understand that two samples from different blood types are different and stop us from mixing them by accident.
+
+// working code
+let sample1 = BloodSample<OPositive>(amount: 5)
+let sample2 = BloodSample<APositive>(amount: 5)
+let sample3 = BloodSample<OPositive>(amount: 7)
+
+let combined1 = sample1 + sample3
+
+// not working code
+
+let combined2 = sample1 + sample2 // Error: Cannot convert value of type 'BloodSample<APositive>' to expected argument type 'BloodSample<OPositive>'

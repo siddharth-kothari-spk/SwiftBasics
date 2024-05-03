@@ -15,6 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         BackgroundTask.registerBackgroundTask()
+        // Note: we need to register background task before returning true from "didFinishLaunchingWithOptions" options otherwise app will crash.
+        // Note : We cant register background task once app is in foreground and running
         return true
     }
 

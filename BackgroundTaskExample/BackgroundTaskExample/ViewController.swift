@@ -5,6 +5,8 @@
 //  Created by Siddharth Kothari on 03/05/24.
 //
 
+// courtsey : https://www.youtube.com/watch?v=Lb7OShyNSdM&ab_channel=iOSAcademy
+
 import UIKit
 
 class ViewController: UIViewController {

@@ -14,6 +14,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        // schedule background task after app launches and view has loaded
+        BackgroundTask.scheduleTask()
     }
 
 

@@ -16,6 +16,7 @@
 		B1324E682BE475D000C713A4 /* BackgroundTaskExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1324E672BE475D000C713A4 /* BackgroundTaskExampleTests.swift */; };
 		B1324E722BE475D000C713A4 /* BackgroundTaskExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1324E712BE475D000C713A4 /* BackgroundTaskExampleUITests.swift */; };
 		B1324E742BE475D000C713A4 /* BackgroundTaskExampleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1324E732BE475D000C713A4 /* BackgroundTaskExampleUITestsLaunchTests.swift */; };
+		B1324E812BE477B700C713A4 /* BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1324E802BE477B700C713A4 /* BackgroundTask.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		B1324E6D2BE475D000C713A4 /* BackgroundTaskExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BackgroundTaskExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1324E712BE475D000C713A4 /* BackgroundTaskExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskExampleUITests.swift; sourceTree = "<group>"; };
 		B1324E732BE475D000C713A4 /* BackgroundTaskExampleUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskExampleUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		B1324E802BE477B700C713A4 /* BackgroundTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				B1324E502BE475CD00C713A4 /* AppDelegate.swift */,
 				B1324E522BE475CD00C713A4 /* SceneDelegate.swift */,
 				B1324E542BE475CD00C713A4 /* ViewController.swift */,
+				B1324E802BE477B700C713A4 /* BackgroundTask.swift */,
 				B1324E562BE475CD00C713A4 /* Main.storyboard */,
 				B1324E592BE475CF00C713A4 /* Assets.xcassets */,
 				B1324E5B2BE475CF00C713A4 /* LaunchScreen.storyboard */,
@@ -260,6 +263,7 @@
 			files = (
 				B1324E552BE475CD00C713A4 /* ViewController.swift in Sources */,
 				B1324E512BE475CD00C713A4 /* AppDelegate.swift in Sources */,
+				B1324E812BE477B700C713A4 /* BackgroundTask.swift in Sources */,
 				B1324E532BE475CD00C713A4 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

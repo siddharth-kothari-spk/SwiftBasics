@@ -23,14 +23,19 @@ class BackgroundTask {
     
     private static func handleTask(_ task: BGAppRefreshTask) {
         let count = UserDefaults.standard.integer(forKey: "task_run_count")
-        UserDefaults.setValue(count + 1, forKey: "task_run_count")
-        
+        UserDefaults.standard.setValue(count + 1, forKey: "task_run_count")
+        print("new count: \(count)")
         task.expirationHandler = {
             // cancel all background work
         }
+        
+        task.setTaskCompleted(success: true)
     }
     
     public static func scheduleTask() {
+        // https://developer.apple.com/documentation/backgroundtasks/starting-and-terminating-tasks-during-development#Launch-a-Task
+        // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.siddharthkothari.BackgroundTaskExample.BG_Task"]
+
         BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: taskID)
         BGTaskScheduler.shared.getPendingTaskRequests { requests in
             print("\(requests.count) BG tasks pending")
@@ -44,7 +49,7 @@ class BackgroundTask {
                  @abstract The earliest date at which the task may run.
                  @discussion Setting this property does not guarantee that the task will begin at the specified date, but only that it will not begin sooner. If not specified, no start delay is used.
                  */
-                taskRequest.earliestBeginDate = Date().addingTimeInterval(86400 * 3)
+                //taskRequest.earliestBeginDate = Date().addingTimeInterval(86400 * 3)
                 
                 try BGTaskScheduler.shared.submit(taskRequest)
                 print("Task scheduled")

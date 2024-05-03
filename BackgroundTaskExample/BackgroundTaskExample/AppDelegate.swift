@@ -17,6 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BackgroundTask.registerBackgroundTask()
         // Note: we need to register background task before returning true from "didFinishLaunchingWithOptions" options otherwise app will crash.
         // Note : We cant register background task once app is in foreground and running
+        
+        
+        let count = UserDefaults.standard.integer(forKey: "task_run_count")
+        print("Task ran \(count) times")
         return true
     }
 

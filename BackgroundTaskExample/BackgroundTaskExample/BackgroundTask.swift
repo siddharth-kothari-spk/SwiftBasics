@@ -23,7 +23,8 @@ class BackgroundTask {
     }
     
     private static func handleTask(_ task: BGAppRefreshTask) {
-        
+        let count = UserDefaults.standard.integer(forKey: "task_run_count")
+        UserDefaults.setValue(count + 1, forKey: "task_run_count")
     }
     
     private static func scheduleTask() {

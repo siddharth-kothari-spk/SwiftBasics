@@ -73,3 +73,71 @@ class ToleranceExample {
 let toleranceExample = ToleranceExample()
 toleranceExample.startTimer()
 
+
+
+
+// 4. Debouncing with Timer
+
+//Debouncing is a technique used to ensure that time-consuming tasks, such as network requests or UI updates, are only executed once after a series of rapid calls. This is often used in scenarios like search bars, where you want to wait for the user to finish typing before triggering a search.
+
+import Foundation
+
+class DebounceExample {
+    var timer: Timer?
+    let debounceInterval = 0.5 // Set your desired debounce interval
+
+    func userDidType() {
+        // Invalidate the previous timer (if any) to restart the debounce interval
+        timer?.invalidate()
+
+        // Start a new timer for the debounce interval
+        timer = Timer.scheduledTimer(timeInterval: debounceInterval, target: self, selector: #selector(search), userInfo: nil, repeats: false)
+    }
+
+    @objc func search() {
+        // Perform the actual search or time-consuming task here
+        print("Performing search...")
+    }
+}
+
+// Usage
+let debounceExample = DebounceExample()
+
+// Simulate user typing by calling userDidType multiple times quickly
+debounceExample.userDidType()
+debounceExample.userDidType()
+debounceExample.userDidType()
+
+// Real-world Example: Search Bar Debouncing
+
+import UIKit
+
+class SearchViewController: UIViewController, UISearchBarDelegate {
+    @IBOutlet weak var searchBar: UISearchBar!
+
+    var timer: Timer?
+    let debounceInterval = 0.5 // Set your desired debounce interval
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        searchBar.delegate = self
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // Invalidate the previous timer (if any) to restart the debounce interval
+        timer?.invalidate()
+
+        // Start a new timer for the debounce interval
+        timer = Timer.scheduledTimer(timeInterval: debounceInterval, target: self, selector: #selector(performSearch), userInfo: searchText, repeats: false)
+    }
+
+    @objc func performSearch(timer: Timer) {
+        guard let searchText = timer.userInfo as? String else {
+            return
+        }
+
+        // Perform the actual search operation with the searchText
+        print("Searching for: \(searchText)")
+    }
+}
+

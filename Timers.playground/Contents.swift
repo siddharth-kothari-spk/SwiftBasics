@@ -33,3 +33,12 @@ class MyTimerExample {
 // Usage
 let myTimerExample = MyTimerExample()
 myTimerExample.startTimer()
+
+
+// 2. Timer Deinitialization
+// Invalidate the timer when you're done with it
+myTimerExample.timer?.invalidate()
+myTimerExample.timer = nil
+
+// When you’re done with a timer, it’s essential to invalidate it to release system resources. This prevents memory leaks and ensures the timer stops firing.
+

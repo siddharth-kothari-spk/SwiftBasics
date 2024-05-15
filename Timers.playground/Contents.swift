@@ -42,3 +42,34 @@ myTimerExample.timer = nil
 
 // When you’re done with a timer, it’s essential to invalidate it to release system resources. This prevents memory leaks and ensures the timer stops firing.
 
+
+
+// 3. Timer Tolerance
+
+//Timer tolerance allows you to control the flexibility of the timer’s firing schedule. By setting a tolerance, you indicate how much variability is acceptable in the firing time. This can be particularly useful for power optimization, as the system can optimize timer firing to conserve energy.
+
+class ToleranceExample {
+    var timer: Timer?
+
+    func startTimer() {
+        // Create a timer with a time interval of 1 second and a tolerance of 0.1 seconds
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
+
+        // Set the timer tolerance
+        timer?.tolerance = 0.1
+    }
+
+    @objc func timerFired() {
+        print("Timer fired!")
+    }
+
+    deinit {
+        timer?.invalidate()
+        timer = nil
+    }
+}
+
+// Usage
+let toleranceExample = ToleranceExample()
+toleranceExample.startTimer()
+

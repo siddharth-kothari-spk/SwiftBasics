@@ -141,3 +141,35 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     }
 }
 
+
+// 5. Practical Examples
+
+// Updating UI Periodically
+
+import UIKit
+
+class ViewController: UIViewController {
+    @IBOutlet weak var timerLabel: UILabel!
+
+    var timer: Timer?
+    var secondsElapsed = 0
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        startTimer()
+    }
+
+    func startTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
+    }
+
+    @objc func updateTimerLabel() {
+        secondsElapsed += 1
+        timerLabel.text = "Seconds Elapsed: \(secondsElapsed)"
+    }
+
+    deinit {
+        timer?.invalidate()
+        timer = nil
+    }
+}

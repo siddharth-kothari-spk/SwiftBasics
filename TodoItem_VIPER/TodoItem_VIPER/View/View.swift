@@ -16,7 +16,7 @@ class TodoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter = TodoPresenter()
+        presenter.view = self
         presenter.interactor = TodoInteractor()
     }
 

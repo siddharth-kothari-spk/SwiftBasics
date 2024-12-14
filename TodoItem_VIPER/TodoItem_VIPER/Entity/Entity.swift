@@ -7,7 +7,9 @@
 
 import Foundation
 
-protocol Entity {}
+protocol Entity {
+    func saveItem(_ item: TodoItem, completion: @escaping (TodoItem) -> Void)
+}
 
 import Foundation
 
@@ -30,5 +32,9 @@ class TodoItem: Entity {
             TodoItem(id: 3, title: "Laundry")
         ]
      completion(items)
+    }
+    
+    func saveItem(_ item: TodoItem, completion: @escaping (TodoItem) -> Void) {
+        
     }
 }

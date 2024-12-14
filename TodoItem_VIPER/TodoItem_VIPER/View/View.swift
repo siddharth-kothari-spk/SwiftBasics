@@ -23,4 +23,14 @@ class TodoViewController: UIViewController {
     @IBAction func addButtonTapped(_ sender: UIButton) {
         presenter.addTodoItem(title: "New Todo Item")
     }
+    
+    func updateView(_ items: [TodoItem]) {
+        // table view updated
+        presenter.updateView(with: items)
+    }
+    
+    func toggleTodoItemAt(_ index: Int) {
+        // table view toggled
+        presenter.toggleTodoItem(at: index)
+    }
 }
